@@ -4,8 +4,6 @@ import logger from "@config/logger";
 
 async function initializeServer() {
   const app = new ServerExpress();
-
-  
   
   try {
     await initializeDB();

@@ -24,7 +24,6 @@ async function executeTransaction<T>(fn: (tx: any) => Promise<T>): Promise<T> {
   }
 }
 
-
 async function initializeDB() {
   await prisma.$connect()
   await prisma.$disconnect()

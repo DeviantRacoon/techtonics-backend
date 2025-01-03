@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "module": "commonjs",
+    "baseUrl": "./",
+    "paths": {
+      "@modules/*": ["src/app/modules/*"],
+      "@app/*": ["src/app/*"],
+      "@middlewares/*": ["src/common/middlewares/*"],
+      "@libs/*": ["src/common/libs/*"],
+      "@utils/*": ["src/common/handlers/*"],
+      "@config/*": ["src/config/*"]
+    },
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  },
+  "exclude": ["node_modules", "dist"]
+}

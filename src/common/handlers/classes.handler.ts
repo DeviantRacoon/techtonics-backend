@@ -3,18 +3,15 @@ export function AutoAccessor(): PropertyDecorator {
     const privateKey = `_${String(propertyKey)}`;
     const capitalizedKey = capitalize(String(propertyKey));
 
-    // Define la propiedad privada
     Object.defineProperty(target, privateKey, {
       writable: true,
       enumerable: false,
       configurable: true,
     });
 
-    // Define los métodos `get<PropertyName>` y `set<PropertyName>`
     const getterName = `get${capitalizedKey}`;
     const setterName = `set${capitalizedKey}`;
 
-    // Define getter dinámico
     if (!Object.prototype.hasOwnProperty.call(target, getterName)) {
       Object.defineProperty(target, getterName, {
         value: function () {
@@ -25,7 +22,6 @@ export function AutoAccessor(): PropertyDecorator {
       });
     }
 
-    // Define setter dinámico
     if (!Object.prototype.hasOwnProperty.call(target, setterName)) {
       Object.defineProperty(target, setterName, {
         value: function (value: any) {
@@ -38,7 +34,6 @@ export function AutoAccessor(): PropertyDecorator {
   };
 }
 
-// Función para capitalizar nombres de propiedades
 function capitalize(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }

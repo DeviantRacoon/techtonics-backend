@@ -33,6 +33,7 @@
 - Arquitectura escalable para crecimiento del proyecto.
 - Herramientas preconfiguradas para desarrollo rápido y eficiente.
 - Funcionalidades integradas para autenticación, validaciones, logging y manejo de errores.
+- Manejo de cache completo con TTL y FIFO.
 
 ---
 
@@ -47,7 +48,7 @@ Techtonics-Backend utiliza las siguientes tecnologías y paquetes:
 - **Bcrypt**: Hashing seguro de contraseñas.
 - **Cors**: Permite solicitudes de recursos entre diferentes orígenes.
 - **Date-fns**: Biblioteca para manipulación y formateo de fechas.
-- **Pino**: Logger rápido y de bajo consumo de recursos.
+- **winston**: Logger rápido y de bajo consumo de recursos.
 - **PM2**: Administrador de procesos para aplicaciones Node.js.
 
 ---
@@ -55,11 +56,13 @@ Techtonics-Backend utiliza las siguientes tecnologías y paquetes:
 ## Características <a name="características"></a>
 
 - **Autenticación**: Manejo de autenticación segura con JWT.
-- **Validaciones**: Validación de datos de entrada mediante `express-validator`.
+- **Caching**: Sistema de caché eficiente con TTL y FIFO para mejorar el rendimiento reduciendo la carga en la base de datos.
 - **Conexión a Base de Datos**: Configuración simplificada utilizando Prisma.
-- **Manejo de Errores**: Centralización de errores y respuestas estandarizadas.
+- **Herramientas de Reducción Código**: Herramientas y técnicas utilizadas para reducir y optimizar el código en el proyecto.
 - **Logging**: Registro eficiente de eventos con Pino.
+- **Manejo de Errores**: Centralización de errores y respuestas estandarizadas.
 - **Modularidad**: Estructura modular y extensible para añadir nuevas funcionalidades.
+- **Validaciones**: Validación de datos de entrada mediante `express-validator`.
 
 ---
 
@@ -102,25 +105,49 @@ Techtonics-Backend incluye los siguientes scripts:
 
 ```
 Techtonics-Backend/
+├── docker-compose.yml
+├── Dockerfile
+├── logs/
+│   ├── debug.log
+│   ├── error.log
+│   ├── info.log
+│   └── warn.log
+├── prisma/
+│   └── schema.prisma
+├── public/
+│   ├── pug/
+│   ├── template/
+│   └── index.html
 ├── src/
+│   ├── app/
+│   │   ├── modules/
+│   │   │   └── module-1/
+│   │   │       ├── models/
+│   │   │       ├── repositories/
+│   │   │       ├── services/
+│   │   │       └── validator/
+│   │   └── routes/
+│   │       ├── subroute-2/
+│   │       │   └── subroute.route.ts
+│   │       ├── subroute-1/
+│   │       │   └── subroute.route.ts
+│   │       └── index.routes.ts
+│   ├── common/
+│   │   ├── handlers/
+│   │   ├── libs/
+│   │   └── middlewares/
 │   ├── config/
-│   │   └── server.ts
-│   ├── libs/
-│   │   └── prisma.ts
-│   ├── index.ts
-├── package.json
-├── tsconfig.json
-└── .env
+│   └── index.ts
+├── .env
 ```
-
 ## Contribuciones <a name="contribuciones"></a>
 
-Las contribuciones son bienvenidas. Puedes reportar errores, sugerir mejoras o enviar pull requests para nuevas funcionalidades. Por favor, abre un issue antes de trabajar en cambios significativos.
+Las contribuciones son bienvenidas. Puedes reportar errores, sugerir mejoras o enviar pull requests para nuevas funcionalidades. Por favor, abre un [issue](https://github.com/DeviantRacoon/techtonics-backend/issues) antes de trabajar en cambios significativos.
 
 ## Licencia <a name="licencia"></a>
 
-Este proyecto está licenciado bajo la Licencia Apache 2.0.
+Este proyecto está licenciado bajo la [Licencia Apache 2.0](LICENSE).
 
 ## Contacto <a name="contacto"></a>
 
-Para consultas, problemas o sugerencias, puedes contactarme a través de mi perfil de GitHub: DeviantRacoon.
+Para consultas, problemas o sugerencias, puedes contactarme a través de mi perfil de GitHub: [DeviantRacoon](https://github.com/DeviantRacoon).

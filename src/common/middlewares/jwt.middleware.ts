@@ -6,7 +6,7 @@ import userSessionRepository from '@modules/user/repositories/user-session.repos
 import dotenv from '@config/dotenv';
 dotenv.config();
 
-const EXCLUDE_ROUTES = ['/api/auth/login', '/api/auth/register'];
+const EXCLUDE_ROUTES = ['/api/auth/login', '/'];
 const UNAUTHORIZED_MESSAGE = "Access Denied: Unauthorized access. Please provide a valid token.";
 
 const validateTokens = async (token: string, refreshToken: string) => {

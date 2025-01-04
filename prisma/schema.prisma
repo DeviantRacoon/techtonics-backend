@@ -62,15 +62,6 @@ model address_catalog {
   person    person_catalog @relation(fields: [personId], references: [personId])
 }
 
-model role_catalog {
-  roleId    Int            @id @default(autoincrement())
-  roleName  String         @unique @db.VarChar(32)
-  status    String         @default("active") @db.VarChar(16)
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-  user      user_catalog[]
-}
-
 model user_session {
   sessionId Int          @id @default(autoincrement())
   userId    Int
@@ -81,4 +72,46 @@ model user_session {
   createdAt DateTime     @default(now())
   expiresAt DateTime     @db.Timestamp
   user      user_catalog @relation(fields: [userId], references: [userId])
+}
+
+model role_catalog {
+  roleId    Int            @id @default(autoincrement())
+  roleName  String         @unique @db.VarChar(32)
+  status    String         @default("active") @db.VarChar(16)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  user      user_catalog[]
+  permission permission_administration[]
+}
+
+model permission_administration {
+  permissionId   Int            @id @default(autoincrement())
+  roleId         Int
+  sectionId      Int
+  status         String         @default("active") @db.VarChar(16)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  role           role_catalog   @relation(fields: [roleId], references: [roleId])
+  section        section_catalog @relation(fields: [sectionId], references: [sectionId])
+}
+
+model menu_catalog {
+  menuId    Int      @id @default(autoincrement())
+  menuName  String   @unique @db.VarChar(32)
+  status    String   @default("active") @db.VarChar(16)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  section   section_catalog[]
+}
+
+model section_catalog {
+  sectionId   Int      @id @default(autoincrement())
+  menuId      Int
+  sectionName String   @unique @db.VarChar(32)
+  url         String   @unique @db.VarChar(512)
+  status      String   @default("active") @db.VarChar(16)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  menu        menu_catalog @relation(fields: [menuId], references: [menuId])
+  permission  permission_administration[]
 }

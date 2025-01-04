@@ -16,7 +16,6 @@ class PersonRepository {
     const paginate = { page: params.page || 1, limit: params.limit || 10 };
 
     const { data, total } = await paginateHandler(person_catalog, where, include, paginate);
-
     return { data, total };
   };
 

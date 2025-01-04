@@ -1,15 +1,19 @@
 import { BaseModel, AutoAccessor } from "@utils/classes.handler";
-
-import User from "./user";
-import Permission from "@modules/menu/models/permission";
+import Permission from "./permission";
 
 type STATUS = "active" | "inactive" | "pending" | "deleted";
-export default class Role extends BaseModel {
+export default class Section extends BaseModel {
   @AutoAccessor()
-  public roleId?: number;
+  public sectionId?: number;
 
   @AutoAccessor()
-  public roleName?: string;
+  public menuId?: number;
+
+  @AutoAccessor()
+  public sectionName?: string;
+
+  @AutoAccessor()
+  public url?: string;
 
   @AutoAccessor()
   public status?: STATUS;
@@ -21,12 +25,12 @@ export default class Role extends BaseModel {
   public updatedAt?: string;
 
   @AutoAccessor()
-  public users?: User;
+  public menu?: any;
 
   @AutoAccessor()
   public permission?: Permission[];
 
-  constructor(init?: Partial<Role>) {
+  constructor(init?: Partial<Section>) {
     super();
     if (init) this.assign(init as Partial<this>);
   }

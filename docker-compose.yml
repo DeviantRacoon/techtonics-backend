@@ -8,13 +8,8 @@ services:
       MYSQL_PASSWORD: dev123
     ports:
       - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
 
-  # app:
-  #   build: .
-  #   ports:
-  #     - "3000:3000"
-  #   environment:
-  #     DB_HOST: db
-  #     DB_USER: dev
-  #     DB_PASSWORD: dev123
-  #     DB_NAME: mydb
+volumes:
+  db_data:

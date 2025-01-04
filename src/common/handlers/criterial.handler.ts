@@ -1,66 +1,94 @@
 type CriteriaHandlerParams = {
-  params: Record<string, any>;
-  allowedKeys: string[];
+  params: Record<string, unknown>;
+  allowedKeys?: string[];
   relationKeys?: string[];
 };
 
 type PrismaQuery = {
-  where: Record<string, any>;
-  include: Record<string, any>;
+  where: Record<string, unknown>;
+  include: Record<string, unknown>;
 };
 
 export default function criterialHandler({
   params,
   allowedKeys,
-  relationKeys = [],
+  relationKeys,
 }: CriteriaHandlerParams): PrismaQuery {
-  const where: Record<string, any> = {};
-  const include: Record<string, any> = {};
+  const where: Record<string, unknown> = {};
+  const include: Record<string, unknown> = {};
 
-  Object.entries(params).forEach(([key, value]) => {
-    if (!value) return;
+  for (const [key, value] of Object.entries(params)) {
+    if (!value) continue; 
 
-    const isRelationKey = relationKeys.some((relation) => key.startsWith(relation));
-    if (isRelationKey) {
-      buildNestedInclude(key, include, relationKeys);
-    } else if (allowedKeys.includes(key)) {
+    if (key.includes(':')) {
+      handleRelationFilter(key, value, where, include);
+    } else if (relationKeys && relationKeys.some((relation) => key.startsWith(relation))) {
+      buildNestedInclude(key, include);
+    } else if (allowedKeys && allowedKeys.includes(key)) {
       Object.assign(where, buildWhereCondition(key, value));
     }
-  });
+  }
 
   return { where, include };
 }
 
+function handleRelationFilter(
+  key: string,
+  value: any,
+  where: Record<string, any>,
+  include: Record<string, any>
+) {
+  const parts = key.split(':');
+  
+  if (parts.length === 2) {
+    const relation = parts[0];
+    const field = parts[1];
+
+    if (!where[relation]) {
+      where[relation] = { some: {} };
+    }
+    where[relation].some[field] = parseValue(value);
+  } else if (parts.length > 2) {
+    const relation = parts[0];
+    const nestedField = parts.slice(1).join('.');
+
+    if (!include[relation]) {
+      include[relation] = { include: {} };
+    }
+
+    buildNestedInclude(nestedField, include[relation].include);
+  }
+}
+
 function buildWhereCondition(key: string, value: any): Record<string, any> {
   if (typeof value === 'string') {
-    if (value.startsWith('!')) {
-      return { [key]: { not: parseValue(value.slice(1)) } };
-    } else if (value.includes('%')) {
-      return { [key]: { contains: value.replace('%', '') } };
-    }
+    return value.startsWith('!')
+      ? { [key]: { not: parseValue(value.slice(1)) } }
+      : value.includes('%')
+        ? { [key]: { contains: value.replace('%', '') } }
+        : { [key]: parseValue(value) };
   } else if (Array.isArray(value)) {
     return { [key]: { in: value } };
   } else if (typeof value === 'object') {
-    return { [key]: { ...value } }; 
+    return { [key]: { ...value } };
   }
-
   return { [key]: parseValue(value) };
 }
 
-function buildNestedInclude(key: string, include: Record<string, any>, relationKeys: string[]) {
-  const keys = key.split('.');
-  let currentInclude = include;
-
-  keys.forEach((k, index) => {
-    if (index === keys.length - 1) {
-      currentInclude[k] = true; 
+function buildNestedInclude(key: string, include: Record<string, any>) {
+  key.split('.').reduce((acc, part, index, arr) => {
+    if (index === arr.length - 1) {
+      acc[part] = true;
     } else {
-      currentInclude[k] = currentInclude[k] || { include: {} };
-      currentInclude = currentInclude[k].include;
+      acc[part] = acc[part] || { include: {} };
     }
-  });
+    return acc[part].include;
+  }, include);
 }
 
 function parseValue(value: any): any {
-  return !isNaN(value) && value.length < 10 ? parseInt(value, 10) : value;
+  if (typeof value === 'string' && /^\d+$/.test(value) && value.length < 10) {
+    return parseInt(value, 10);
+  }
+  return value;
 }

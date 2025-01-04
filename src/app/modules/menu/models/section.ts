@@ -1,7 +1,8 @@
 import { BaseModel, AutoAccessor } from "@utils/classes.handler";
+import Permission from "./permission";
 
 type STATUS = "active" | "inactive" | "pending" | "deleted";
-export default class Menu extends BaseModel {
+export default class Section extends BaseModel {
   @AutoAccessor()
   public sectionId?: number;
 
@@ -27,9 +28,9 @@ export default class Menu extends BaseModel {
   public menu?: any;
 
   @AutoAccessor()
-  public permission?: any;
+  public permission?: Permission[];
 
-  constructor(init?: Partial<Menu>) {
+  constructor(init?: Partial<Section>) {
     super();
     if (init) this.assign(init as Partial<this>);
   }

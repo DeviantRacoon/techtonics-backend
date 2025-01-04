@@ -14,6 +14,11 @@ export const getOneMenu = requestHandler(async (req: Request) => {
   return role;
 });
 
+export const getMenusAllowed = requestHandler(async (req: Request) => {
+  const menus = await menuRepository.getMenusByRole(1)
+  return menus
+})
+
 export const createMenu = requestHandler(async (req: Request) => {
   const menu = new Menu(req.body);
   const result = await menuRepository.createOrUpdate(menu);

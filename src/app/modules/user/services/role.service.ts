@@ -18,7 +18,6 @@ export const getOneRole = requestHandler(async (req: Request) => {
 
 export const roleRegister = requestHandler(async (req: Request) => {
   const role = new Role(req.body);
-
   const result = await roleRepository.createRoleOrUpdate(role);
   return result;
 });

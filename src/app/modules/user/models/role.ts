@@ -1,5 +1,8 @@
 import { BaseModel, AutoAccessor } from "@utils/classes.handler";
 
+import User from "./user";
+import Permission from "@modules/menu/models/permission";
+
 type STATUS = "active" | "inactive" | "pending" | "deleted";
 export default class Role extends BaseModel {
   @AutoAccessor()
@@ -18,7 +21,10 @@ export default class Role extends BaseModel {
   public updatedAt?: string;
 
   @AutoAccessor()
-  public users?: any;
+  public users?: User;
+
+  @AutoAccessor()
+  public permission?: Permission[];
 
   constructor(init?: Partial<Role>) {
     super();

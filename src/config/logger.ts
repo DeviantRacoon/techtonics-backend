@@ -91,7 +91,6 @@ const createCustomLogger = (logDir: string = "./logs", level: string = "info", p
     );
   }
 
-  // Crear el logger con todos los transportes configurados
   const logger = winston.createLogger({
     level,
     transports,
@@ -100,7 +99,6 @@ const createCustomLogger = (logDir: string = "./logs", level: string = "info", p
   return logger;
 };
 
-// Crear una instancia del logger
 const logger = createCustomLogger("./logs", "debug", process.env.NODE_ENV === "development");
 
 export default logger;

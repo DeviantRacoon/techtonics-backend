@@ -1,0 +1,14 @@
+import { Router } from 'express';
+import { validate } from '@middlewares/validator.middleware';
+
+import { {{#each services}}{{this}}, {{/each}} } from '@modules/{{parentModule}}/services/{{module}}.service';
+import { create{{module}}Schema, update{{module}}Schema } from '@modules/{{parentModule}}/validator/{{module}}.validator';
+
+const router = Router();
+
+router.get('/', {{services.[0]}});
+router.get('/unique', {{services.[1]}});
+router.post('/', validate(create{{module}}Schema), {{services.[2]}});
+router.put('/', validate(update{{module}}Schema), {{services.[3]}});
+
+export default router;

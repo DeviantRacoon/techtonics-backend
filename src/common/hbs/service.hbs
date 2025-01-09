@@ -1,0 +1,12 @@
+import { Request } from "express";
+import { requestHandler } from "@utils/request.handler";
+
+import {{module}} from "../models/{{module}}";
+import {{module}}Repository from "../repositories/{{module}}.repository";
+
+export const get{{module}} = requestHandler(async (req: Request) => {
+  const data = await {{module}}Repository.getAll(req.query);
+  return data;
+});
+
+// Otros métodos dinámicos...

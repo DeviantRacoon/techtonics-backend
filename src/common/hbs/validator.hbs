@@ -1,0 +1,7 @@
+import { body } from "express-validator";
+
+export const create{{module}}Schema = [
+  body('{{fields.[0].name}}')
+    .notEmpty().withMessage('Este campo es requerido.')
+    .isLength({ min: 3 }).withMessage('Debe tener al menos 3 caracteres.')
+];

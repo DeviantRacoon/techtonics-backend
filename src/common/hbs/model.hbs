@@ -5,6 +5,7 @@ export default class {{module}} extends BaseModel {
   {{#each fields}}
   @AutoAccessor()
   public {{name}}?: {{type}};
+
   {{/each}}
 
   constructor(init?: Partial<{{module}}>) {

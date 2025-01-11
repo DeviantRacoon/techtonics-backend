@@ -1,7 +1,19 @@
 import { body } from "express-validator";
+import {{import}}Repository from "../repositories/{{import}}.repository";
+
+const exist{{module}} = async ({{import}}Id: number) => {
+  const {{import}} = await {{import}}Repository.getOneByParams({ {{import}}Id });
+  if (!{{import}}) return false;
+};
 
 export const create{{module}}Schema = [
   body('{{fields.[0].name}}')
     .notEmpty().withMessage('Este campo es requerido.')
     .isLength({ min: 3 }).withMessage('Debe tener al menos 3 caracteres.')
+];
+export const update{{module}}Schema = [
+  body('{{import}}Id')
+    .custom(exist{{module}}).withMessage('El elemento no existe.')
+    .notEmpty().withMessage('El id es requerido.')
+    .isNumeric().withMessage('El id debe ser un número.')
 ];

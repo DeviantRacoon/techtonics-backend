@@ -1,0 +1,54 @@
+import prisma from "@libs/prisma";
+
+import {{module}} from "../models/{{import}}";
+import criterialHandler from "@utils/criterial.handler";
+import paginateHandler from "@utils/paginate.handler";
+
+class {{module}}Repository {
+  
+  async getByParams(params: any) {
+    const { {{dbModel}} } = prisma;
+
+    const allowedKeys = ['status'];
+    const relationKeys = [];
+
+    const { where, include } = criterialHandler({ params, allowedKeys, relationKeys });
+    const paginate = { page: params.page || 1, limit: params.limit || 10 };
+
+    const { data, total } = await paginateHandler({{dbModel}}, where, include, paginate);
+    return { data, total };
+  };
+
+  async getOneByParams(params: any) {
+    const { {{dbModel}} } = prisma;
+
+    const allowedKeys = ['{{import}}Id', 'status'];
+    const relationKeys = [];
+
+    const query = criterialHandler({params, allowedKeys, relationKeys});
+
+    const {{import}} = await {{dbModel}}.findFirst(query);
+    return {{import}};
+  };
+
+  async createOrUpdate({{import}}: {{module}}) {
+    const { {{dbModel}} } = prisma;
+    let result;
+
+    if ({{import}}.{{import}}Id) {
+      result = await {{dbModel}}.update({
+        where: { {{import}}Id: {{import}}.{{import}}Id },
+        data: {{import}}.toJSON()
+      });
+    } else {
+      result = await {{dbModel}}.create({
+        data: {{import}}.toJSON() as any
+      });
+    }
+
+    return result;
+  };
+}
+
+const {{import}}Repository = new {{module}}Repository();
+export default {{import}}Repository;

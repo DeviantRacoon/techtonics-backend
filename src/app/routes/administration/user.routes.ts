@@ -4,11 +4,11 @@ import { validate } from '@middlewares/validator.middleware';
 import { getUser, getOneUser, userRegister, userUpdate } from '@modules/user/services/user.service';
 import { createUserSchema, updateUserSchema } from '@modules/user/validator/user.validator';
 
-const router = Router();
+const userRouter = Router();
 
-router.get('/', getUser);
-router.get('/unique', getOneUser);
-router.post('/', validate(createUserSchema), userRegister);
-router.put('/', validate(updateUserSchema), userUpdate);
+userRouter.get('/', getUser);
+userRouter.get('/unique', getOneUser);
+userRouter.post('/', validate(createUserSchema), userRegister);
+userRouter.put('/', validate(updateUserSchema), userUpdate);
 
-export default router;
+export default userRouter;

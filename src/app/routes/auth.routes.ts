@@ -4,8 +4,8 @@ import { validate } from '@middlewares/validator.middleware';
 import { login } from '@modules/user/services/user.service';
 import { loginSchema } from '@modules/user/validator/user.validator';
 
-const router = Router();
+const authRoute = Router();
 
-router.post('/login', validate(loginSchema), login);
+authRoute.post('/login', validate(loginSchema), login);
 
-export default router;
+export default authRoute;

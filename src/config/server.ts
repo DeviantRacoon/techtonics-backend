@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import corsConfig from "./cors";
-import routeManager from "./routes";
+import routes from "./routes";
 
 import responseMiddleware from "@middlewares/response.middleware";
 import notFoundMiddleware from "@middlewares/404.middleware";
@@ -17,6 +17,7 @@ export class ServerExpress {
     this.app = express();
     this.port = Number(process.env.PORT) || 3000;
 
+    routes(this.app);
     this.initializeMiddlewares();
   }
 
@@ -26,15 +27,10 @@ export class ServerExpress {
     this.app.use(express.static("public"));
     this.app.use(responseMiddleware);
     this.app.use(authMiddleware);
-  }
-
-  private async initializeRoutes() {
-    await routeManager(this.app);
-    this.app.use(notFoundMiddleware); // 404 middleware siempre debe estar al final
+    this.app.use(notFoundMiddleware);
   }
 
   startServer(callback: VoidFunction) {
-    this.initializeRoutes();
     this.app.listen(this.port, callback);
   }
 }

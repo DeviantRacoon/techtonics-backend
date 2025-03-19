@@ -4,11 +4,11 @@ import { validate } from '@middlewares/validator.middleware';
 import { getRoles, getOneRole, roleRegister, roleUpdate } from '@modules/user/services/role.service';
 import { createRoleSchema, updateRoleSchema } from '@modules/user/validator/role.validator';
 
-const router = Router();
+const roleRouter = Router();
 
-router.get('/', getRoles);
-router.get('/unique', getOneRole);
-router.post('/', validate(createRoleSchema), roleRegister);
-router.put('/', validate(updateRoleSchema), roleUpdate);
+roleRouter.get('/', getRoles);
+roleRouter.get('/unique', getOneRole);
+roleRouter.post('/', validate(createRoleSchema), roleRegister);
+roleRouter.put('/', validate(updateRoleSchema), roleUpdate);
 
-export default router;
+export default roleRouter;

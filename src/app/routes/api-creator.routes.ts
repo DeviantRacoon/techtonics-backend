@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import Handlebars from 'handlebars';
 
-const router = Router();
+const apiCreatorRouter = Router();
 
 const TEMPLATES_DIR = path.resolve(__dirname, '../../common/hbs');
 const MODULES_DIR = path.resolve(__dirname, '../modules');
@@ -17,7 +17,7 @@ const generateFileFromTemplate = async (templateName: string, outputPath: string
   await fs.outputFile(outputPath, content);
 };
 
-router.post('/', async (req, res) => {
+apiCreatorRouter.post('/', async (req, res) => {
   if (process.env.NODE_ENV !== 'development') {
     res.status(403).json({ error: 'This endpoint is only available in development.' });
     return;
@@ -107,4 +107,4 @@ router.post('/', async (req, res) => {
   }
 });
 
-export default router;
+export default apiCreatorRouter;

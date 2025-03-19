@@ -5,10 +5,10 @@ import { closeSessionSchema } from '@modules/user/validator/session.validator';
 
 import { getSessions, closeSession, banSession } from '@modules/user/services/session.service';
 
-const router = Router();
+const sessionRouter = Router();
 
-router.get('/', getSessions);
-router.put('/close-session', validate(closeSessionSchema), closeSession);
-router.put('/ban-session', validate(closeSessionSchema), banSession);
+sessionRouter.get('/', getSessions);
+sessionRouter.put('/close-session', validate(closeSessionSchema), closeSession);
+sessionRouter.put('/ban-session', validate(closeSessionSchema), banSession);
 
-export default router;
+export default sessionRouter;

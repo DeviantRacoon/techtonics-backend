@@ -17,7 +17,7 @@ export function requestHandler(
 
         const response: { ok: boolean, data?: any, total?: number } = { ok: true };
 
-        response.data = data && data.total ? data.data : data;
+        response.data = data && data.total !== undefined ? data.data : data;
         response.total = data ? data.total : undefined;
 
         sanitizeWithNonResponseFields(response.data);

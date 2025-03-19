@@ -4,11 +4,11 @@ import { validate } from "@middlewares/validator.middleware";
 import { getPermissions, getOnePermission, createPermission, updatePermission } from "@modules/menu/services/permission.service";
 import { createPermissionSchema, updatePermissionSchema } from "@modules/menu/validator/permission.validator";
 
-const router = Router();
+const permissionRouter = Router();
 
-router.get("/", getPermissions);
-router.get("/unique", getOnePermission);
-router.post("/", validate(createPermissionSchema), createPermission);
-router.put("/", validate(updatePermissionSchema), updatePermission);
+permissionRouter.get("/", getPermissions);
+permissionRouter.get("/unique", getOnePermission);
+permissionRouter.post("/", validate(createPermissionSchema), createPermission);
+permissionRouter.put("/", validate(updatePermissionSchema), updatePermission);
 
-export default router;
+export default permissionRouter;

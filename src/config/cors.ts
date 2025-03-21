@@ -6,7 +6,7 @@ const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
     callback(null, !origin || allowedOrigins.includes(origin));
   },
-  exposedHeaders: ['Authorization'], 
+  exposedHeaders: ['Authorization', 'x-refresh-token'], 
 };
 
 export default cors(corsOptions);

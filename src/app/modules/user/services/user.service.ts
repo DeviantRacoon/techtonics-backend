@@ -53,7 +53,7 @@ export const login = requestHandler(async (req: Request, res: Response) => {
   res.setHeader("Authorization", `Bearer ${token}`);
   res.setHeader("x-refresh-token", refreshToken);
 
-  return;
+  return user;
 });
 
 

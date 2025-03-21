@@ -8,10 +8,10 @@ import permissionRouter from "./permission.routes";
 
 const administrationRouter = Router();
 
-administrationRouter.use("/user", userRouter);
-administrationRouter.use("/role", roleRouter);
-administrationRouter.use("/section", sectionRouter);
-administrationRouter.use("/menu", menuRouter);
-administrationRouter.use("/permission", permissionRouter);
+administrationRouter.use("/users", userRouter);
+administrationRouter.use("/roles", roleRouter);
+administrationRouter.use("/sections", sectionRouter);
+administrationRouter.use("/menus", menuRouter);
+administrationRouter.use("/permissions", permissionRouter);
 
 export default administrationRouter;

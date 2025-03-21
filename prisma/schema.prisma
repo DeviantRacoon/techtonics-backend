@@ -66,7 +66,7 @@ model user_session {
   sessionId Int          @id @default(autoincrement())
   userId    Int
   token     String       @unique @db.VarChar(192)
-  device    String       @db.VarChar(32)
+  device    String       @db.VarChar(128)
   ip        String       @db.VarChar(16)
   status    String       @db.VarChar(16)
   createdAt DateTime     @default(now())

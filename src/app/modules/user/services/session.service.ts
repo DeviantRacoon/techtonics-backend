@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { customErrorHandler, requestHandler } from "@utils/request.handler";
+import { requestHandler } from "@utils/request.handler";
 
 import UserSession from "../models/user-session";
 import userSessionRepository from "../repositories/user-session.repository";

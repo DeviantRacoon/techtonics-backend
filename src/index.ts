@@ -1,6 +1,6 @@
 import { ServerExpress } from "./config/server";
 import { initializeDB } from "@libs/prisma";
-import logger from "@config/logger";
+import logger from "@libs/logger";
 
 async function initializeServer() {
   const app = new ServerExpress();
@@ -12,8 +12,9 @@ async function initializeServer() {
     app.startServer(() => {
       logger.info(`Server is up and running at http://localhost:${app.port}`);
     });
+    
   } catch (error) {
-    logger.error("Failed to initialize server:", error instanceof Error ? error.message : error);
+    logger.error(`Failed to initialize server: ${error}`);
     process.exit(1); 
   }
 }

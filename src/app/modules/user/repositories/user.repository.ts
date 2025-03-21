@@ -1,6 +1,6 @@
 import User from "../models/user";
 
-import prisma, { executeTransaction } from "@libs/prisma";
+import prisma from "@libs/prisma";
 
 import criterialHandler from "@utils/criterial.handler";
 import paginateHandler from "@utils/paginate.handler";
@@ -59,8 +59,7 @@ class UserRepository {
     });
   
     return result;
-  }
-  
+  }  
 
   async updateUserWithPerson(user: User) {
     const { person, userId, roleId, ...userParams } = user.toJSON();

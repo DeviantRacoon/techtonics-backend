@@ -1,3 +1,4 @@
+import logger from "@libs/logger";
 import { Request, Response, NextFunction } from "express";
 
 export function customErrorHandler(
@@ -28,7 +29,7 @@ export function requestHandler(
       if (error.message && error.statusCode) {
         res.status(error.statusCode).json({ ok: false, message: error.message });
       } else {
-        console.error("Error capturado:", error);
+        logger.error(`Error capturado: ${error}`);
         res.status(500).json({ ok: false, message: "Lo sentimos, ha ocurrido un error, nuestro equipo lo esta trabajando. Por favor, intente mas tarde." });
       }
     }

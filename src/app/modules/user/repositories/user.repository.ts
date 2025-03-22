@@ -14,9 +14,10 @@ class UserRepository {
     const relationKeys = ['person', 'role', 'person.address'];
 
     const { where, include } = criterialHandler({ params, allowedKeys, relationKeys });
-    const paginate = { page: params.page || 1, limit: params.limit || 10 };
+    const paginate = { page: +params.page, limit: +params.limit };
+    const order = params.order;
 
-    const { data, total } = await paginateHandler(user_catalog, where, include, paginate);
+    const { data, total } = await paginateHandler(user_catalog, where, include, paginate, order);
     return { data, total };
   }
 

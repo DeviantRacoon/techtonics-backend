@@ -3,7 +3,7 @@ import { BaseModel, AutoAccessor } from "@utils/classes.handler";
 import Role from "@modules/user/models/role";
 import Section from "./section";
 
-type STATUS = "active" | "inactive" | "pending" | "deleted";
+type STATUS = "ACTIVO" | "INACTIVO" | "PENDIENTE" | "ELIMINADO";
 export default class Permission extends BaseModel {
   @AutoAccessor()
   public permissionId?: number;

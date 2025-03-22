@@ -1,7 +1,7 @@
 import { BaseModel, AutoAccessor } from "@utils/classes.handler";
 import Section from "./section";
 
-type STATUS = "active" | "inactive" | "pending" | "deleted";
+type STATUS = "ACTIVO" | "INACTIVO" | "PENDIENTE" | "ELIMINADO";
 export default class Menu extends BaseModel {
   @AutoAccessor()
   public menuId?: number;

@@ -1,7 +1,7 @@
 import { BaseModel, AutoAccessor } from "@utils/classes.handler";
 import PersonAddress from "./person-address";
 
-type STATUS = "active" | "inactive" | "pending" | "deleted";
+type STATUS = "ACTIVO" | "INACTIVO" | "PENDIENTE" | "ELIMINADO";
 export default class Person extends BaseModel {
   @AutoAccessor()
   public personId?: number;

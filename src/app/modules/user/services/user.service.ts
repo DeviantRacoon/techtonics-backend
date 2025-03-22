@@ -22,7 +22,7 @@ export const getOneUser = requestHandler(async (req: Request) => {
 export const userRegister = requestHandler(async (req: Request) => {
   const user = new User(req.body);
 
-  user.status = "pending";
+  user.status = "PENDIENTE";
   user.password = hashPassword(user.password!);
   user.person!.birthdate = new Date(user.person?.birthdate!);
 

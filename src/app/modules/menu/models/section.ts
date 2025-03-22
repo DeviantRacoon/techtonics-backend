@@ -1,7 +1,7 @@
 import { BaseModel, AutoAccessor } from "@utils/classes.handler";
 import Permission from "./permission";
 
-type STATUS = "active" | "inactive" | "pending" | "deleted";
+type STATUS = "ACTIVO" | "INACTIVO" | "PENDIENTE" | "ELIMINADO";
 export default class Section extends BaseModel {
   @AutoAccessor()
   public sectionId?: number;

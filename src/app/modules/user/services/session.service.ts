@@ -18,7 +18,7 @@ export const getOneUser = requestHandler(async (req: Request) => {
 
 export const closeSession = requestHandler(async (req: Request) => {
   const session = new UserSession(req.body);
-  session.status = "inactive";
+  session.status = "INACTIVO";
 
   await userSessionRepository.updateSession(session);
   return session;
@@ -26,7 +26,7 @@ export const closeSession = requestHandler(async (req: Request) => {
 
 export const banSession = requestHandler(async (req: Request) => {
   const session = new UserSession(req.body);
-  session.status = "ban";
+  session.status = "BANEADO";
 
   await userSessionRepository.updateSession(session);
   return session;
@@ -38,7 +38,7 @@ export const createSession = async (req: Request, userId: number, token: string)
     token,
     ip: req.ip || "S/N",
     device: req.headers["user-agent"] || "S/N",
-    status: "active",
+    status: "ACTIVO",
     expiresAt: addDays(new Date(), 7).toISOString(),
   });
 

@@ -1,7 +1,7 @@
 import { BaseModel, AutoAccessor } from "@utils/classes.handler";
 import User from "./user";
 
-type SESSION_STATUS = "active" | "inactive" | "ban";
+type SESSION_STATUS = "ACTIVO" | "INACTIVO" | "BANEADO";
 export default class UserSession extends BaseModel {
   @AutoAccessor()
   public sessionId?: number;

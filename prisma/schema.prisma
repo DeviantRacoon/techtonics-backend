@@ -21,7 +21,7 @@ model user_catalog {
   email        String         @unique @db.VarChar(64)
   password     String         @db.VarChar(64)
   code         String?        @db.VarChar(8)
-  status       String         @default("active") @db.VarChar(16)
+  status       String         @default("ACTIVO") @db.VarChar(16)
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   person       person_catalog @relation(fields: [personId], references: [personId])
@@ -39,7 +39,7 @@ model person_catalog {
   cellphone      String            @db.VarChar(10)
   gender         String            @db.VarChar(1)
   birthdate      DateTime          @db.Date
-  status         String            @default("active") @db.VarChar(16)
+  status         String            @default("ACTIVO") @db.VarChar(16)
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
   user           user_catalog?
@@ -77,7 +77,7 @@ model user_session {
 model role_catalog {
   roleId     Int                         @id @default(autoincrement())
   roleName   String                      @unique @db.VarChar(32)
-  status     String                      @default("active") @db.VarChar(16)
+  status     String                      @default("ACTIVO") @db.VarChar(16)
   createdAt  DateTime                    @default(now())
   updatedAt  DateTime                    @updatedAt
   user       user_catalog[]
@@ -88,7 +88,7 @@ model permission_administration {
   permissionId Int             @id @default(autoincrement())
   roleId       Int
   sectionId    Int
-  status       String          @default("active") @db.VarChar(16)
+  status       String          @default("ACTIVO") @db.VarChar(16)
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
   role         role_catalog    @relation(fields: [roleId], references: [roleId])
@@ -98,7 +98,7 @@ model permission_administration {
 model menu_catalog {
   menuId    Int               @id @default(autoincrement())
   menuName  String            @db.VarChar(32)
-  status    String            @default("active") @db.VarChar(16)
+  status    String            @default("ACTIVO") @db.VarChar(16)
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
   section   section_catalog[]
@@ -109,7 +109,7 @@ model section_catalog {
   menuId      Int
   sectionName String                      @db.VarChar(32)
   url         String                      @db.VarChar(512)
-  status      String                      @default("active") @db.VarChar(16)
+  status      String                      @default("ACTIVO") @db.VarChar(16)
   createdAt   DateTime                    @default(now())
   updatedAt   DateTime                    @updatedAt
   menu        menu_catalog                @relation(fields: [menuId], references: [menuId])

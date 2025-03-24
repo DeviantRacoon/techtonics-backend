@@ -1,48 +1,40 @@
-import { BaseModel, AutoAccessor } from "@utils/classes.handler";
+import { Expose, Transform, Type, plainToInstance, instanceToPlain } from "class-transformer";
 
 import Role from "./role";
 import Person from "./person";
 
 type STATUS = "ACTIVO" | "INACTIVO" | "PENDIENTE" | "ELIMINADO";
-export default class User extends BaseModel {
-  @AutoAccessor()
-  public userId?: number;
 
-  @AutoAccessor()
-  public personId?: number;
+export default class User {
+  @Expose() public userId?: number;
+  @Expose() public personId?: number;
+  @Expose() public roleId?: number;
+  @Expose() public email?: string;
+  @Expose() public password?: string;
+  @Expose() public code?: string;
+  @Expose() public status?: STATUS;
+  @Expose() public createdAt?: string;
+  @Expose() public updatedAt?: string;
 
-  @AutoAccessor()
-  public roleId?: number;
+  @Transform(({ value }) => (value ? value.toUpperCase() : value))
+  @Expose() public username?: string;
 
-  @AutoAccessor()
-  public username?: string;
-
-  @AutoAccessor()
-  public email?: string;
-
-  @AutoAccessor()
-  public password?: string;
-
-  @AutoAccessor()
-  public code?: string;
-
-  @AutoAccessor()
-  public status?: STATUS;
-
-  @AutoAccessor()
-  public createdAt?: string;
-
-  @AutoAccessor()
-  public updatedAt?: string;
-
-  @AutoAccessor()
+  @Type(() => Person)
+  @Expose()
   public person?: Person;
 
-  @AutoAccessor()
+  @Type(() => Role)
+  @Expose()
   public role?: Role;
 
-  constructor(init?: Partial<User>) {
-    super();
-    if (init) this.assign(init as Partial<this>);
+  constructor(data: Partial<User>) {
+    return plainToInstance(User, data, { excludeExtraneousValues: true });
+  }
+  
+  toJSON() {
+    return Object.fromEntries(
+      Object.entries(instanceToPlain(this, { exposeUnsetFields: false }))
+        .filter(([_, v]) => v !== null && v !== undefined)
+    );
   }
 }

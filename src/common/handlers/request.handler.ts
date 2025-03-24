@@ -16,10 +16,11 @@ export function requestHandler(
       const data = await fn(req, res, next);
       if (data !== undefined) {
 
-        const response: { ok: boolean, data?: any, total?: number } = { ok: true };
+        const response: { ok: boolean, data?: any, total?: number, message?: string } = { ok: true };
 
         response.data = data && data.total !== undefined ? data.data : data;
         response.total = data ? data.total : undefined;
+        response.message = data && data.message ? data.message : undefined;
 
         sanitizeWithNonResponseFields(response.data);
         res.status(200).json(response);

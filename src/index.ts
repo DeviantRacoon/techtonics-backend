@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { ServerExpress } from "./config/server";
 import { initializeDB } from "@libs/prisma";
 import logger from "@libs/logger";

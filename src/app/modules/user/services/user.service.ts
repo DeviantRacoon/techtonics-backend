@@ -24,16 +24,16 @@ export const userRegister = requestHandler(async (req: Request) => {
 
   user.status = "PENDIENTE";
   user.password = hashPassword(user.password!);
-  user.person!.birthdate = new Date(user.person?.birthdate!);
 
-  const result = await userRepository.createUserWithPerson(user);
-  return result;
+  await userRepository.createUserWithPerson(user);
+  return { message: "Usuario creado con éxito" };
 });
 
 export const userUpdate = requestHandler(async (req: Request) => {
   const user = new User(req.body);
-  const result = await userRepository.updateUserWithPerson(user);
-  return result;
+  await userRepository.updateUserWithPerson(user);
+
+  return { message: "Se actualizo el usuario correctamente." };
 });
 
 export const login = requestHandler(async (req: Request, res: Response) => {

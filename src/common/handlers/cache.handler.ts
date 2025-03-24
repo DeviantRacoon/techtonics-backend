@@ -187,7 +187,7 @@ export default class CacheManager<T> {
         if (!entry.expiresAt || entry.expiresAt > Date.now()) {
           this.cache.set(decodeURIComponent(file), entry);
         } else {
-          fs.unlinkSync(filePath); // Elimina archivos expirados
+          fs.unlinkSync(filePath);
         }
       } catch (err) {
         console.error(`Error al cargar la entrada de caché ${file}:`, err);

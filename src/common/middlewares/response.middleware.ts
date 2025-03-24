@@ -13,6 +13,7 @@ export default function responseMiddleware(req: Request, res: Response, next: Ne
     } else if (body && body.message) {
       body = {
         ok: true,
+        message: body.message || "Petición exitosa",
         ...body,
       };
     }

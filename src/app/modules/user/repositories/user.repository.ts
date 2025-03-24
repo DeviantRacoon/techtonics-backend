@@ -35,7 +35,7 @@ class UserRepository {
 
   async createUserWithPerson(user: User) {
     const { person, ...userParams } = user.toJSON();
-  
+
     const result = await prisma.user_catalog.create({
       data: {
         ...userParams as any,
@@ -43,7 +43,7 @@ class UserRepository {
           create: {
             ...person,
             address: {
-              create: person.address.map((addr: any) => ({
+              create: person?.address?.map((addr: any) => ({
                 street: addr.street,
                 number: addr.number,
                 suburb: addr.suburb,

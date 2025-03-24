@@ -6,9 +6,24 @@ import userSessionRepository from '../repositories/user-session.repository';
 
 const uniqueField = (field: string, repository: any) => {
   return async (value: string, helpers: any) => {
+    if (!value || value.length === 0) return true;
     const filter = { [field]: value };
     const record = await repository.getOneByParams(filter);
     if (record) return helpers.error('any.custom');
+  };
+};
+
+const uniqueFieldExceptOwner = (field: string, repository: any, ownerField: string, getOwnerId: (body: any) => any) => {
+  return async (value: string, { req }: any) => {
+    if (!value || value.length === 0) return true;
+
+    const ownerId = getOwnerId(req.body);
+    const filter = { [field]: value, [ownerField]: '!' + ownerId };
+    
+    const record = await repository.getOneByParams(filter);
+
+    if (record) throw new Error('El CURP ya está en uso.');
+    return record;
   };
 };
 
@@ -24,9 +39,7 @@ const isIpBanned = async (ip: string, helpers: any) => {
 
 export const createUserSchema = [
   body('username')
-    .notEmpty().withMessage('El nombre es requerido.')
-    .isLength({ min: 3 }).withMessage('El nombre debe tener al menos 3 caracteres.')
-    .custom(uniqueField('username', userRepository)).withMessage('El nombre de usuario ya está en uso.'),
+    .custom(uniqueField('username', userRepository)).withMessage('Esta persona ya existe como usuario.'),
 
   body('email')
     .notEmpty().withMessage('El correo es requerido.')
@@ -37,11 +50,8 @@ export const createUserSchema = [
     .notEmpty().withMessage('La contraseña es requerida.')
     .isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres.'),
 
-  body('person.firstName')
+  body('person.names')
     .notEmpty().withMessage('El nombre es requerido.'),
-
-  body('person.lastName')
-    .notEmpty().withMessage('El apellido es requerido.'),
 
   body('person.secondLastName')
     .notEmpty().withMessage('El apellido es requerido.'),
@@ -78,12 +88,14 @@ export const updateUserSchema = [
   body('email')
     .optional()
     .isEmail().withMessage('El correo debe ser un correo válido.')
-    .custom(uniqueField('email', userRepository)).withMessage('El correo ya está en uso.'),
+    .custom(uniqueFieldExceptOwner('email', userRepository, 'userId',
+      (body: any) => body.userId)).withMessage('El correo ya está en uso.'),
 
   body('person.curp')
     .optional()
     .isLength({ min: 18 }).withMessage('El CURP debe tener al menos 18 caracteres.')
-    .custom(uniqueField('curp', personRepository)).withMessage('El CURP ya está en uso.'),
+    .custom(uniqueFieldExceptOwner('curp', personRepository, 'personId',
+      (body: any) => body.person.personId)).withMessage('El CURP ya está en uso.'),
 
   body('person.cellphone')
     .optional()
@@ -91,7 +103,6 @@ export const updateUserSchema = [
 
   body('person.birthdate')
     .optional()
-    .isDate().withMessage('La fecha de nacimiento debe ser una fecha válida.'),
 ];
 
 export const loginSchema = [

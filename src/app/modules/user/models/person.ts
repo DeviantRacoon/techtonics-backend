@@ -1,49 +1,37 @@
-import { BaseModel, AutoAccessor } from "@utils/classes.handler";
+import { Expose, Transform, Type, plainToInstance, instanceToPlain } from "class-transformer";
+
 import PersonAddress from "./person-address";
+import User from "./user";
 
 type STATUS = "ACTIVO" | "INACTIVO" | "PENDIENTE" | "ELIMINADO";
-export default class Person extends BaseModel {
-  @AutoAccessor()
-  public personId?: number;
+export default class Person {
+  @Expose() public personId?: number;
+  @Expose() public names?: string;
+  @Expose() public lastName?: string;
+  @Expose() public secondLastName?: string;
+  @Expose() public curp?: string;
+  @Expose() public gender?: string;
+  @Expose() public cellphone?: string;
+  @Expose() public status?: STATUS;
+  @Expose() public createdAt?: string;
+  @Expose() public updatedAt?: string;
 
-  @AutoAccessor()
-  public firstName?: string;
+  @Transform(({ value }) => (value ? new Date(value).toISOString() : null))
+  @Expose() public birthdate?: string;
 
-  @AutoAccessor()
-  public middleName?: string;
-
-  @AutoAccessor()
-  public lastName?: string;
-
-  @AutoAccessor()
-  public secondLastName?: string;
-
-  @AutoAccessor()
-  public curp?: string;
-
-  @AutoAccessor()
-  public cellphone?: string;
-
-  @AutoAccessor()
-  public birthdate?: Date;
-
-  @AutoAccessor()
-  public status?: STATUS;
-
-  @AutoAccessor()
-  public createdAt?: string;
-
-  @AutoAccessor()
-  public updatedAt?: string;
-
-  @AutoAccessor()
-  public users?: any;
-
-  @AutoAccessor()
+  @Type(() => PersonAddress)
+  @Expose()
   public address?: PersonAddress[];
 
-  constructor(init?: Partial<Person>) {
-    super();
-    if (init) this.assign(init as Partial<this>);
+  @Type(() => User)
+  @Expose()
+  public users?: User[];
+
+  constructor(data: Partial<Person>) {
+    return plainToInstance(Person, data, { excludeExtraneousValues: true });
+  }
+
+  toJSON() {
+    return instanceToPlain(this, { strategy: "excludeAll" });
   }
 }

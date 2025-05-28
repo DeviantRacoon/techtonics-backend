@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '@libs/token';
 
-import userSessionRepository from '@modules/user/repositories/user-session.repository';
+import userSessionRepository from '@modules/users/infrastructure/repositories/user-session.repository';
 
 import dotenv from '@config/dotenv';
 dotenv.config();

@@ -7,12 +7,14 @@
     "module": "commonjs",
     "baseUrl": "./",
     "paths": {
-      "@modules/*": ["src/app/modules/*"],
       "@app/*": ["src/app/*"],
+      "@modules/*": ["src/app/modules/*"],
+      "@routes/*": ["src/app/routes/*"],
       "@middlewares/*": ["src/common/middlewares/*"],
       "@libs/*": ["src/common/libs/*"],
       "@utils/*": ["src/common/handlers/*"],
-      "@config/*": ["src/config/*"]
+      "@config/*": ["src/config/*"],
+      "@public/*": ["public/*"]
     },
     "outDir": "./dist",
     "esModuleInterop": true,

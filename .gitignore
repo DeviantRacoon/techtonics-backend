@@ -146,3 +146,7 @@ dist
 # Prisma
 prisma/migrations/
 prisma/dev.db
+
+node_modules/
+.pnpm-debug.log
+pnpm-lock.yaml

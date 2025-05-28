@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
 import { validate } from '@middlewares/validator.middleware';
-import { closeSessionSchema } from '@modules/user/validator/session.validator';
+import { closeSessionSchema } from '@modules/users/domain/validator/session.validator';
 
-import { getSessions, closeSession, banSession } from '@modules/user/services/session.service';
+import { getSessions, closeSession, banSession } from '@modules/users/services/session.service';
 
 const sessionRouter = Router();
 

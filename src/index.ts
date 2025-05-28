@@ -1,23 +1,25 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 
-import { ServerExpress } from "./config/server";
-import { initializeDB } from "@libs/prisma";
-import logger from "@libs/logger";
+import { ServerExpress } from '@config/server';
+import { AppDataSource } from '@config/typeorm';
+
+import logger from '@libs/logger';
 
 async function initializeServer() {
-  const app = new ServerExpress();
-  
   try {
-    await initializeDB();
-    logger.info("Connection successful to the database");
-    
+
+    await AppDataSource.initialize();
+    logger.info('✅ Conexión a la base de datos exitosa');
+
+    const app = new ServerExpress();
+
     app.startServer(() => {
-      logger.info(`Server is up and running at http://localhost:${app.port}`);
+      logger.info(`🚀 Servidor iniciado en http://localhost:${app.port}`);
     });
     
   } catch (error) {
-    logger.error(`Failed to initialize server: ${error}`);
-    process.exit(1); 
+    logger.error(`❌ Error al iniciar el servidor o la base de datos: ${error}`);
+    process.exit(1);
   }
 }
 

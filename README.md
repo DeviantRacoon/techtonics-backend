@@ -13,8 +13,11 @@
 - [Descripción](#descripción)
 - [Tecnologías](#tecnologías)
 - [Características](#características)
+- [Requisitos Previos](#requisitos-previos)
 - [Instalación](#instalación)
-- [Comandos Disponibles](#comandos-disponibles)
+- [Variables de Entorno](#variables-de-entorno)
+- [Scripts](#scripts)
+- [Uso con Docker](#uso-con-docker)
 - [Estructura del Proyecto](#estructura-del-proyecto)
 - [Contribuciones](#contribuciones)
 - [Licencia](#licencia)
@@ -24,39 +27,44 @@
 
 ## Descripción
 
-**Techtonics Backend** es un proyecto escrito en TypeScript que utiliza **Express.js** junto con **TypeORM** para interactuar con la base de datos. La arquitectura está pensada para ser modular y extensible, ofreciendo un punto de partida robusto para proyectos de API REST.
+**Techtonics Backend** es una API escrita en TypeScript que emplea **Express.js** y **TypeORM**. La arquitectura se basa en módulos de dominio para que el código sea fácil de mantener y extender.
 
 ### Beneficios
 
 - Código fuertemente tipado con TypeScript.
-- Arquitectura por módulos que facilita el mantenimiento.
-- Utilidades de caché, manejo de errores y logging integradas.
-- Listo para Docker y despliegue en producción.
+- Diseño modular inspirado en Domain Driven Design.
+- Autenticación con JWT y contraseñas hasheadas con bcrypt.
+- Listo para contenedores Docker y despliegue en producción.
 
 ---
 
 ## Tecnologías
 
-- **TypeScript**: Tipado estático sobre JavaScript.
-- **Express.js**: Framework minimalista para HTTP.
-- **TypeORM**: ORM para trabajar con distintas bases de datos.
-- **JWT (jsonwebtoken)**: Autenticación basada en tokens.
-- **Bcrypt**: Hashing seguro de contraseñas.
-- **Cors**: Soporte para CORS.
-- **Date-fns**: Manipulación de fechas.
-- **PM2**: Administrador de procesos para entornos productivos.
+- **Node.js 18**
+- **TypeScript**
+- **Express.js**
+- **TypeORM** (MySQL por defecto)
+- **JWT (jsonwebtoken)**
+- **Bcryptjs**
+- **PM2**
 
 ---
 
 ## Características
 
-- **Autenticación** con JWT y almacenamiento de sesiones.
-- **Caching** con TTL, alcance local o global y persistencia opcional.
-- **Conexión a Base de Datos** mediante TypeORM.
-- **Logging** de solicitudes y eventos del sistema.
-- **Manejo de Errores** centralizado.
-- **Validaciones** con `express-validator`.
-- **Estructura Modular** para añadir nuevas funcionalidades.
+- Gestión de usuarios, roles y sesiones.
+- Middlewares globales para logging, autenticación y manejo de errores.
+- Repositorios y servicios basados en TypeORM.
+- Migraciones de base de datos con TypeORM CLI.
+- Dockerfile y docker-compose para ambiente local.
+
+---
+
+## Requisitos Previos
+
+- Node.js 18 o superior
+- npm o pnpm
+- MySQL (o Docker para levantar la base de datos)
 
 ---
 
@@ -69,15 +77,21 @@ git clone https://github.com/DeviantRacoon/techtonics-backend.git
 cd techtonics-backend
 ```
 
-2. Instala las dependencias:
+2. Instala las dependencias
 
 ```bash
 npm install
 ```
 
-3. Copia `.env.EXAMPLE` a `.env` y ajusta las variables según tu entorno.
+3. Copia `.env.EXAMPLE` a `.env` y ajusta las variables
 
-4. Inicia el servidor en modo desarrollo:
+4. Ejecuta las migraciones de TypeORM
+
+```bash
+npm run migration:run
+```
+
+5. Inicia el servidor en modo desarrollo
 
 ```bash
 npm run dev
@@ -85,14 +99,44 @@ npm run dev
 
 ---
 
-## Comandos Disponibles
+## Variables de Entorno
 
-- `dev`: Ejecuta el servidor con reinicio automático.
-- `build`: Compila el proyecto a JavaScript.
-- `start`: Inicia la versión compilada con PM2.
-- `stop`: Detiene el proceso de PM2.
-- `restart`: Reinicia el proceso de PM2.
-- `pm2-logs`: Muestra los registros de PM2.
+```env
+NODE_ENV=development
+PORT=3000
+DATABASE_URL="mysql://user:pass@localhost:3306/mydb"
+SALT_ROUNDS=10
+JWT_SECRET="mysecret"
+JWT_REFRESH_SECRET="myrefresh"
+TOKEN_EXPIRATION=10m
+REFRESH_TOKEN_EXPIRATION=7d
+```
+
+---
+
+## Scripts
+
+- `dev` – Ejecuta el servidor con nodemon.
+- `build` – Compila el proyecto a JavaScript.
+- `start` – Inicia la versión compilada con PM2.
+- `stop` – Detiene el proceso de PM2.
+- `restart` – Reinicia el proceso de PM2.
+- `pm2-logs` – Muestra los registros de PM2.
+- `migration:generate` – Crea una nueva migración.
+- `migration:run` – Ejecuta las migraciones pendientes.
+- `migration:revert` – Revierte la última migración.
+
+---
+
+## Uso con Docker
+
+Para levantar un contenedor MySQL de desarrollo puedes ejecutar:
+
+```bash
+docker-compose up -d
+```
+
+Una vez la base de datos esté lista, ejecuta las migraciones y arranca la aplicación.
 
 ---
 
@@ -105,6 +149,7 @@ techtonics-backend/
 ├── public/
 ├── src/
 │   ├── app/
+│   │   ├── core/
 │   │   ├── modules/
 │   │   └── routes/
 │   ├── common/
@@ -132,5 +177,4 @@ Este proyecto está bajo la [Licencia Apache 2.0](LICENSE).
 
 ## Contacto
 
-Puedes contactarme en [DeviantRacoon](https://github.com/DeviantRacoon).
-
+[DeviantRacoon](https://github.com/DeviantRacoon)

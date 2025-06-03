@@ -9,25 +9,20 @@ dotenv.config();
 const EXCLUDE_ROUTES = ['/api/auth/login', '/'];
 const UNAUTHORIZED_MESSAGE = "Access Denied: Unauthorized access. Please provide a valid token.";
 
-const validateTokens = async (token: string, refreshToken: string) => {
-  const refreshTokenSession = await userSessionRepository.getOneByParams({ token: refreshToken, status: 'active' });
+const validateTokens = async (token: string) => {
+  const tokenSession = await userSessionRepository.getOneUserSessionByParams({ token, status: 'active' });
 
-  if (!refreshTokenSession) {
+  if (!tokenSession) {
     return { valid: false, message: UNAUTHORIZED_MESSAGE };
   }
 
   const tokenData = verifyToken(token);
   if (tokenData.error) {
-    if (tokenData.error !== 'TokenExpiredError') {
-      return { valid: false, message: UNAUTHORIZED_MESSAGE };
-    }
+    return { valid: false, message: `Token verification failed: ${tokenData.error}` };
+  }
 
-    const refreshTokenData = verifyToken(refreshToken, true);
-    if (refreshTokenData.error) {
-      return { valid: false, message: UNAUTHORIZED_MESSAGE };
-    }
-
-    return { valid: true, userData: refreshTokenData };
+  if (tokenData.error !== 'TokenExpiredError') {
+    return { valid: false, message: UNAUTHORIZED_MESSAGE };
   }
 
   return { valid: true, userData: tokenData };
@@ -41,13 +36,12 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction): 
   if (EXCLUDE_ROUTES.includes(req.path)) return next();
 
   const token = req.headers['authorization'];
-  const refreshToken = req.headers['x-refresh-token'] as string;
 
   if (!token) {
     return res.status(401).json({ ok: false, message: UNAUTHORIZED_MESSAGE });
   }
 
-  const { valid, userData, message } = await validateTokens(token, refreshToken);
+  const { valid, userData, message } = await validateTokens(token);
   if (!valid) {
     return res.status(401).json({ ok: false, message });
   }

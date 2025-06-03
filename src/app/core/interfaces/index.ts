@@ -1,0 +1,1 @@
+export { ResponseInterface } from "./response.interface";

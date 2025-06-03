@@ -1,9 +1,9 @@
 import { Expose, Type, plainToInstance, instanceToPlain } from "class-transformer";
 
 import User from "./user";
-// import Permission from "@modules/menu/models/permission";
+import Permission from "./permission";
 
-type STATUS = "ACTIVO" | "INACTIVO" | "PENDIENTE" | "ELIMINADO";
+type STATUS = "ACTIVO" | "ELIMINADO";
 
 export default class Role {
   @Expose() roleId?: number;
@@ -16,9 +16,9 @@ export default class Role {
   @Expose()
   users?: User;
 
-  // @Type(() => Permission)
-  // @Expose()
-  // permission?: Permission[];
+  @Type(() => Permission)
+  @Expose()
+  permission?: Permission[];
 
   constructor(data: Partial<Role>) {
     return plainToInstance(Role, data, { excludeExtraneousValues: true });

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { customErrorHandler, requestHandler } from "@utils/request.handler";
+import { requestHandler, customErrorHandler } from "@core/bases/base.services";
 
 import User from "../domain/models/user";
 import userRepository from "../infrastructure/repositories/user.repository";
@@ -7,15 +7,15 @@ import userRepository from "../infrastructure/repositories/user.repository";
 import { createSession } from "./session.service";
 
 import { hashPassword, comparePassword } from "@libs/bcrypt";
-import { generateToken, generateRefreshToken } from "@libs/token";
+import { generateToken } from "@libs/token";
 
 export const getUser = requestHandler(async (req: Request) => {
-  const { data, total } = await userRepository.getUserByParams(req.query);
+  const { data, total } = await userRepository.getUsersByParams(req.query);
   return { data, total };
 });
 
 export const getOneUser = requestHandler(async (req: Request) => {
-  const user = await userRepository.getOneByParams(req.query);
+  const user = await userRepository.getOneUserByParams(req.query);
   return user;
 });
 
@@ -39,19 +39,18 @@ export const userUpdate = requestHandler(async (req: Request) => {
 export const login = requestHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  const user = await userRepository.getOneByParams({ email });
+  const user = await userRepository.getOneUserByParams({ email });
   !user && customErrorHandler("Credenciales invalidas", 401);
 
   const isValid = comparePassword(password, user!.password);
   !isValid && customErrorHandler("Credenciales invalidas", 401);
 
   const token = generateToken({ userId: user!.userId, username: user!.username });
-  const refreshToken = generateRefreshToken({ userId: user!.userId, username: user!.username });
 
-  await createSession(req, user!.userId!, refreshToken);
+  await createSession(req, user!.userId!, token);
 
   res.setHeader("Authorization", `Bearer ${token}`);
-  res.setHeader("x-refresh-token", refreshToken);
+  res.setHeader("Access-Control-Expose-Headers", "Authorization");
 
   return user;
 });

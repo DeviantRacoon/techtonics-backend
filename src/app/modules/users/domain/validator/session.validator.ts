@@ -2,7 +2,7 @@ import { body } from "express-validator";
 import userSessionRepository from "../../infrastructure/repositories/user-session.repository";
 
 const existSession = async (sessionId: number) => {
-  const session = await userSessionRepository.getOneByParams({ sessionId });
+  const session = await userSessionRepository.getOneUserSessionByParams({ sessionId });
   return !!session;
 };
 

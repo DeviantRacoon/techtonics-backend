@@ -8,18 +8,22 @@
     "stop": "pm2 stop express-app",
     "restart": "pm2 restart express-app",
     "build": "tsc --build",
-    "pm2-logs": "pm2 logs express-app"
+    "pm2-logs": "pm2 logs express-app",
+    "typeorm": "ts-node -r tsconfig-paths/register node_modules/typeorm/cli.js",
+    "migration:generate": "pnpm typeorm migration:generate src/common/database/migrations/InitMigration -d src/config/typeorm.ts",
+    "migration:run": "pnpm typeorm migration:run -d src/config/typeorm.ts",
+    "migration:revert": "pnpm typeorm migration:revert -d src/config/typeorm.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "class-transformer": "^0.5.1",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
-    "dotenv": "^16.4.7",
+    "dotenv": "^16.5.0",
     "express": "^4.21.2",
     "express-validator": "^7.2.1",
     "jsonwebtoken": "^9.0.2",
@@ -29,18 +33,17 @@
     "typeorm": "^0.3.24"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
-    "@types/cors": "^2.8.17",
+    "@types/cors": "^2.8.18",
     "@types/dotenv": "^6.1.1",
-    "@types/express": "^5.0.0",
+    "@types/express": "^5.0.2",
     "@types/fs-extra": "^11.0.4",
-    "@types/jsonwebtoken": "^9.0.7",
-    "@types/node": "^22.10.2",
-    "fs-extra": "^11.2.0",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^22.15.24",
+    "fs-extra": "^11.3.0",
     "handlebars": "^4.7.8",
-    "nodemon": "^3.1.9",
+    "nodemon": "^3.1.10",
     "pm2": "^5.4.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.8.3"
   }
 }

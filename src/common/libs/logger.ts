@@ -1,21 +1,20 @@
-import chalk from "chalk";
-
 const logger = {
   info: (message: string) => {
-    console.log(chalk.blue(`[INFO] ${message}`));
+    console.log('\x1b[36m%s\x1b[0m', `[INFO] ${message}`);
   },
   warn: (message: string) => {
-    console.log(chalk.yellow(`[WARN] ${message}`));
+    console.log('\x1b[33m%s\x1b[0m', `[WARN] ${message}`);
   },
   error: (message: string) => {
-    console.log(chalk.red(`[ERROR] ${message}`));
+    console.log('\x1b[31m%s\x1b[0m', `[ERROR] ${message}`);
   },
   debug: (message: string) => {
-    console.log(chalk.magenta(`[DEBUG] ${message}`));
+    console.log('\x1b[35m%s\x1b[0m', `[DEBUG] ${message}`);
   },
   request: (message: string) => {
-    console.log(chalk.green(message));
+    console.log('\x1b[32m%s\x1b[0m', message);
   },
 };
 
 export default logger;
+

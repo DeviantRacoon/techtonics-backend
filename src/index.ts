@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 
+import AppDataSource from '@config/typeorm';
 import { ServerExpress } from '@config/server';
-import { AppDataSource } from '@config/typeorm';
 
 import logger from '@libs/logger';
 
@@ -16,7 +16,7 @@ async function initializeServer() {
     app.startServer(() => {
       logger.info(`🚀 Servidor iniciado en http://localhost:${app.port}`);
     });
-    
+
   } catch (error) {
     logger.error(`❌ Error al iniciar el servidor o la base de datos: ${error}`);
     process.exit(1);

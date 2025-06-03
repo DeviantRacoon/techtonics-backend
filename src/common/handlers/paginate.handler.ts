@@ -1,19 +1,46 @@
-export default async function paginateHandler(
-  model: any,
-  where: { [key: string]: any },
-  include: { [key: string]: any },
-  paginate: { page: number, limit: number } = { page: 1, limit: 15 },
-  orderBy: 'asc' | 'desc' | 'none' = 'desc'
-) {
-  const skip = (paginate.page - 1) * paginate.limit;
-  const take = paginate.limit;
-  
-  orderBy = orderBy === 'none' ? 'desc' : orderBy;
+import { ObjectLiteral, SelectQueryBuilder } from 'typeorm';
 
-  const [data, total] = await Promise.all([
-    model.findMany({ where, skip, include, take, orderBy: { createdAt: orderBy } }),
-    model.count()
-  ]);
+interface PaginationOptions {
+  page?: number;
+  limit?: number;
+  orderBy?: 'ASC' | 'DESC';
+}
 
-  return { data, total };
+export async function paginateWithQueryBuilder<T extends ObjectLiteral>(
+  qb: SelectQueryBuilder<T>,
+  options: PaginationOptions
+): Promise<{
+  data: T[];
+  total: number;
+  page?: number;
+  limit?: number;
+  totalPages?: number;
+}> {
+  const { page, limit, orderBy = 'DESC' } = options;
+
+  qb.orderBy(`${qb.alias}.createdAt`, orderBy);
+
+  let data: T[];
+  let total: number;
+
+  if (page && limit) {
+
+    qb.skip((page - 1) * limit).take(limit);
+    [data, total] = await qb.getManyAndCount();
+  } else {
+    data = await qb.getMany();
+    total = data.length;
+  }
+
+  return {
+    data,
+    total,
+    ...(page && limit
+      ? {
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      }
+      : {}),
+  };
 }

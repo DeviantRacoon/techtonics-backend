@@ -1,6 +1,5 @@
 import { Request } from "express";
-
-import { requestHandler } from "@utils/request.handler";
+import { requestHandler } from "@core/bases/base.services";
 
 import Role from "../domain/models/role";
 import roleRepository from "../infrastructure/repositories/role.repository";
@@ -8,6 +7,8 @@ import roleRepository from "../infrastructure/repositories/role.repository";
 
 export const getRoles = requestHandler(async (req: Request) => {
   const { data, total } = await roleRepository.getRolesByParams(req.query);
+  console.log({ data, total });
+  
   return { data, total };
 });
 

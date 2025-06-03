@@ -1,9 +1,8 @@
 import { Expose, Transform, Type, plainToInstance, instanceToPlain } from "class-transformer";
 
-import PersonAddress from "./person-address";
 import User from "./user";
 
-type STATUS = "ACTIVO" | "INACTIVO" | "PENDIENTE" | "ELIMINADO";
+type STATUS = "ACTIVO" | "ELIMINADO";
 
 export default class Person {
   @Expose() personId?: number;
@@ -20,10 +19,6 @@ export default class Person {
   @Transform(({ value }) => (value ? new Date(value).toISOString() : null))
   @Expose()
   birthdate?: string;
-
-  @Type(() => PersonAddress)
-  @Expose()
-  address?: PersonAddress[];
 
   @Type(() => User)
   @Expose()

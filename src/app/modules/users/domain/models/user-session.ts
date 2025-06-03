@@ -2,7 +2,7 @@ import { Expose, Type, plainToInstance, instanceToPlain } from "class-transforme
 
 import User from "./user";
 
-type SESSION_STATUS = "ACTIVO" | "INACTIVO" | "BANEADO";
+type SESSION_STATUS = "ACTIVO" | "ELIMINADO" | "BANEADO";
 
 export default class UserSession {
   @Expose() sessionId?: number;

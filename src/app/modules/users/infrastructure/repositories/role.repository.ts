@@ -1,52 +1,44 @@
-import prisma from "@libs/prisma";
-
 import Role from "../../domain/models/role";
+import { RoleEntity } from "../entities/role.entity";
 
-import criterialHandler from "@utils/criterial.handler";
-import paginateHandler from "@utils/paginate.handler";
+import { BaseRepository } from "@app/core/bases/base.repository";
+import { ResponseInterface } from "@app/core/interfaces";
 
-class RoleRepository {
-  async getRolesByParams(params: any) {
-    const { role_catalog } = prisma;
+import Permission from "../../domain/models/permission";
 
-    const allowedKeys = ['roleId', 'roleName', 'status'];
-    const relationKeys = ['user'];
+class RoleRepository extends BaseRepository<RoleEntity> {
+  constructor() { super(RoleEntity, 'role') };
 
-    const { where, include } = criterialHandler({ params, allowedKeys, relationKeys });
-    const paginate = { page: params.page || 1, limit: params.limit || 10 };
+  async getRolesByParams(params: Record<string, any>): Promise<ResponseInterface<RoleEntity>> {
+    const { page, limit, orderBy, ...filters } = params;
 
-    const { data, total } = await paginateHandler(role_catalog, where, include, paginate);
-    return { data, total };
+    this.joinConfig = {
+      permissions: "left"
+    };
+
+    return this.findAllByParams({
+      filters,
+      page,
+      limit,
+      orderBy,
+      forceJoins: ['permissions']
+    });
   };
 
-  async getOneRoleByParams(params: any) {
-    const { role_catalog } = prisma;
-
-    const allowedKeys = ['roleId', 'roleName', 'status'];
-    const relationKeys = ['user'];
-
-    const query = criterialHandler({params, allowedKeys, relationKeys});
-
-    const role = await role_catalog.findFirst(query);
-    return role;
+  async getOneRoleByParams(params: Record<string, any>): Promise<RoleEntity | null> {
+    return this.findOneByParams(params);
   };
 
-  async createRoleOrUpdate(role: Role) {
-    let result;
-
-    if (role.roleId) {
-      result = await prisma.role_catalog.update({
-        where: { roleId: role.roleId },
-        data: role.toJSON()
-      });
-    } else {
-      result = await prisma.role_catalog.create({
-        data: role.toJSON() as any
-      });
-    }
-
-    return result;
+  async createRoleOrUpdate(role: Role): Promise<RoleEntity> {
+    return await this.repository.save(role.toJSON());
   };
+
+  async addPermissionToRole(roleId: number, permissions: Permission[]) {
+    return await this.repository.update(roleId, {
+      permissions: permissions.map(permission => permission.toJSON())
+    });
+  };
+
 }
 
 const roleRepository = new RoleRepository();

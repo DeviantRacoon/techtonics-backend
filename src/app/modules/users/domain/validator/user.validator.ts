@@ -4,11 +4,22 @@ import userRepository from '../../infrastructure/repositories/user.repository';
 import personRepository from '../../infrastructure/repositories/person.repository';
 import userSessionRepository from '../../infrastructure/repositories/user-session.repository';
 
-const uniqueField = (field: string, repository: any) => {
+const uniquePersonField = (field: string) => {
   return async (value: string, helpers: any) => {
     if (!value || value.length === 0) return true;
     const filter = { [field]: value };
-    const record = await repository.getOneByParams(filter);
+    const record = await personRepository.getOnePersonByParams(filter);
+
+    if (record) return helpers.error('any.custom');
+  };
+};
+
+const uniqueUserField = (field: string) => {
+  return async (value: string, helpers: any) => {
+    if (!value || value.length === 0) return true;
+    const filter = { [field]: value };
+    const record = await userRepository.getOneUserByParams(filter);
+
     if (record) return helpers.error('any.custom');
   };
 };
@@ -19,32 +30,40 @@ const uniqueFieldExceptOwner = (field: string, repository: any, ownerField: stri
 
     const ownerId = getOwnerId(req.body);
     const filter = { [field]: value, [ownerField]: '!' + ownerId };
-    
-    const record = await repository.getOneByParams(filter);
 
-    if (record) throw new Error('El CURP ya está en uso.');
+    let record: any = null;
+    if (repository === personRepository) {
+      record = await personRepository.getPersonsByParams(filter);
+    } else {
+      record = await userRepository.getOneUserByParams(filter);
+    }
+
+    if (record) throw new Error('No valido.');
     return record;
   };
 };
 
 const existUser = async (userId: number, helpers: any) => {
-  const user = await userRepository.getOneByParams({ userId });
+  const user = await userRepository.getOneUserByParams({ userId });
   if (!user) return helpers.error('any.custom');
 };
 
 const isIpBanned = async (ip: string, helpers: any) => {
-  const bannedIp = await userSessionRepository.getOneByParams({ ip, status: 'ban' });
+  const bannedIp = await userSessionRepository.getOneUserSessionByParams({ ip, status: 'ban' });
   if (bannedIp) return helpers.error('any.custom');
 };
 
 export const createUserSchema = [
   body('username')
-    .custom(uniqueField('username', userRepository)).withMessage('Esta persona ya existe como usuario.'),
+    .notEmpty().withMessage('El nombre de usuario es requerido.')
+    .isLength({ min: 3 }).withMessage('El nombre de usuario debe tener al menos 3 caracteres.')
+    .isLength({ max: 20 }).withMessage('El nombre de usuario debe tener un máximo de 20 caracteres.')
+    .custom(uniqueUserField('username')).withMessage('Esta persona ya existe como usuario.'),
 
   body('email')
     .notEmpty().withMessage('El correo es requerido.')
     .isEmail().withMessage('El correo debe ser un correo válido.')
-    .custom(uniqueField('email', userRepository)).withMessage('El correo ya está en uso.'),
+    .custom(uniqueUserField('email')).withMessage('El correo ya está en uso.'),
 
   body('password')
     .notEmpty().withMessage('La contraseña es requerida.')
@@ -62,7 +81,7 @@ export const createUserSchema = [
 
   body('person.curp')
     .notEmpty().withMessage('El CURP es requerido.')
-    .custom(uniqueField('curp', personRepository)).withMessage('El CURP ya está en uso.')
+    .custom(uniquePersonField('curp')).withMessage('El CURP ya está en uso.')
     .isLength({ min: 18 }).withMessage('El CURP debe tener al menos 18 caracteres.'),
 
   body('person.cellphone')
@@ -83,7 +102,7 @@ export const updateUserSchema = [
   body('username')
     .optional()
     .isLength({ min: 3 }).withMessage('El nombre debe tener al menos 3 caracteres.')
-    .custom(uniqueField('username', userRepository)).withMessage('El nombre de usuario ya está en uso.'),
+    .custom(uniqueUserField('username')).withMessage('El nombre de usuario ya está en uso.'),
 
   body('email')
     .optional()

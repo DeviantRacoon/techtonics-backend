@@ -8,11 +8,12 @@
     "baseUrl": "./",
     "paths": {
       "@app/*": ["src/app/*"],
+      "@core/*": ["src/app/core/*"],
       "@modules/*": ["src/app/modules/*"],
       "@routes/*": ["src/app/routes/*"],
       "@middlewares/*": ["src/common/middlewares/*"],
       "@libs/*": ["src/common/libs/*"],
-      "@utils/*": ["src/common/handlers/*"],
+      "@handlers/*": ["src/common/handlers/*"],
       "@config/*": ["src/config/*"],
       "@public/*": ["public/*"]
     },

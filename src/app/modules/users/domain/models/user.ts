@@ -3,7 +3,7 @@ import { Expose, Transform, Type, plainToInstance, instanceToPlain } from "class
 import Role from "./role";
 import Person from "./person";
 
-type STATUS = "ACTIVO" | "INACTIVO" | "PENDIENTE" | "ELIMINADO";
+export type STATUS = "ACTIVO" | "INACTIVO" | "PENDIENTE" | "ELIMINADO";
 
 export default class User {
   @Expose() public userId?: number;

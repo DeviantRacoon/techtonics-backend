@@ -1,4 +1,4 @@
-# Techtonics-Backend
+# Techtonics Backend
 
 <div align="center">
 
@@ -10,7 +10,6 @@
 ---
 
 ## Tabla de Contenidos
-
 - [Descripción](#descripción)
 - [Tecnologías](#tecnologías)
 - [Características](#características)
@@ -23,131 +22,115 @@
 
 ---
 
-## Descripción <a name="descripción"></a>
+## Descripción
 
-**Techtonics-Backend** es un proyecto backend desarrollado en TypeScript utilizando **Express.js** como framework principal. Este backend está diseñado para manejar operaciones del servidor y conectarse a una base de datos mediante **Prisma**, proporcionando un conjunto robusto de herramientas para desarrollo y producción.
+**Techtonics Backend** es un proyecto escrito en TypeScript que utiliza **Express.js** junto con **TypeORM** para interactuar con la base de datos. La arquitectura está pensada para ser modular y extensible, ofreciendo un punto de partida robusto para proyectos de API REST.
 
-### Beneficios:
+### Beneficios
 
-- Código tipado y robusto gracias a TypeScript.
-- Arquitectura escalable para crecimiento del proyecto.
-- Herramientas preconfiguradas para desarrollo rápido y eficiente.
-- Funcionalidades integradas para autenticación, validaciones, logging y manejo de errores.
-- Manejo de cache completo con TTL y FIFO.
+- Código fuertemente tipado con TypeScript.
+- Arquitectura por módulos que facilita el mantenimiento.
+- Utilidades de caché, manejo de errores y logging integradas.
+- Listo para Docker y despliegue en producción.
 
 ---
 
-## Tecnologías <a name="tecnologías"></a>
+## Tecnologías
 
-Techtonics-Backend utiliza las siguientes tecnologías y paquetes:
-
-- **TypeScript**: Superconjunto de JavaScript con tipado estático.
-- **Express.js**: Framework minimalista para aplicaciones web.
-- **Prisma**: ORM moderno y flexible para manejar bases de datos.
-- **JWT (jsonwebtoken)**: Implementación de autenticación basada en tokens.
+- **TypeScript**: Tipado estático sobre JavaScript.
+- **Express.js**: Framework minimalista para HTTP.
+- **TypeORM**: ORM para trabajar con distintas bases de datos.
+- **JWT (jsonwebtoken)**: Autenticación basada en tokens.
 - **Bcrypt**: Hashing seguro de contraseñas.
-- **Cors**: Permite solicitudes de recursos entre diferentes orígenes.
-- **Date-fns**: Biblioteca para manipulación y formateo de fechas.
-- **winston**: Logger rápido y de bajo consumo de recursos.
-- **PM2**: Administrador de procesos para aplicaciones Node.js.
+- **Cors**: Soporte para CORS.
+- **Date-fns**: Manipulación de fechas.
+- **PM2**: Administrador de procesos para entornos productivos.
 
 ---
 
-## Características <a name="características"></a>
+## Características
 
-- **Autenticación**: Manejo de autenticación segura con JWT.
-- **Caching**: Sistema de caché eficiente con TTL y FIFO para mejorar el rendimiento reduciendo la carga en la base de datos.
-- **Conexión a Base de Datos**: Configuración simplificada utilizando Prisma.
-- **Herramientas de Reducción Código**: Herramientas y técnicas utilizadas para reducir y optimizar el código en el proyecto.
-- **Logging**: Registro eficiente de eventos con Pino.
-- **Manejo de Errores**: Centralización de errores y respuestas estandarizadas.
-- **Modularidad**: Estructura modular y extensible para añadir nuevas funcionalidades.
-- **Validaciones**: Validación de datos de entrada mediante `express-validator`.
+- **Autenticación** con JWT y almacenamiento de sesiones.
+- **Caching** con TTL, alcance local o global y persistencia opcional.
+- **Conexión a Base de Datos** mediante TypeORM.
+- **Logging** de solicitudes y eventos del sistema.
+- **Manejo de Errores** centralizado.
+- **Validaciones** con `express-validator`.
+- **Estructura Modular** para añadir nuevas funcionalidades.
 
 ---
 
-## Instalación <a name="instalación"></a>
+## Instalación
 
-Sigue estos pasos para instalar y configurar el proyecto:
-
-1. Clona el repositorio:
+1. Clona el repositorio
 
 ```bash
 git clone https://github.com/DeviantRacoon/techtonics-backend.git
 cd techtonics-backend
 ```
 
-2.  Instala las dependencias
+2. Instala las dependencias:
 
 ```bash
 npm install
 ```
 
-3. Crea un archivo .env en la raíz del proyecto y define las variables de entorno necesarias, tienes un ejemplo llamado **env.EXAMPLE**.
+3. Copia `.env.EXAMPLE` a `.env` y ajusta las variables según tu entorno.
 
 4. Inicia el servidor en modo desarrollo:
+
 ```bash
 npm run dev
 ```
 
-## Comandos Disponibles <a name="comandos-disponibles"></a>
+---
 
-Techtonics-Backend incluye los siguientes scripts:
+## Comandos Disponibles
 
-- dev: Inicia el servidor en modo desarrollo usando nodemon.
-- start: Inicia el servidor en modo producción con pm2.
-- stop: Detiene el servidor con pm2.
-- restart: Reinicia el servidor con pm2.
-- build: Compila el proyecto TypeScript.
-- pm2-logs: Muestra los logs del servidor con pm2.
+- `dev`: Ejecuta el servidor con reinicio automático.
+- `build`: Compila el proyecto a JavaScript.
+- `start`: Inicia la versión compilada con PM2.
+- `stop`: Detiene el proceso de PM2.
+- `restart`: Reinicia el proceso de PM2.
+- `pm2-logs`: Muestra los registros de PM2.
 
-## Estructura del Proyecto <a name="estructura-del-proyecto"></a>
+---
+
+## Estructura del Proyecto
 
 ```
-Techtonics-Backend/
+techtonics-backend/
 ├── docker-compose.yml
 ├── Dockerfile
-├── logs/
-│   ├── debug.log
-│   ├── error.log
-│   ├── info.log
-│   └── warn.log
-├── prisma/
-│   └── schema.prisma
 ├── public/
-│   ├── pug/
-│   ├── template/
-│   └── index.html
 ├── src/
 │   ├── app/
 │   │   ├── modules/
-│   │   │   └── module-1/
-│   │   │       ├── models/
-│   │   │       ├── repositories/
-│   │   │       ├── services/
-│   │   │       └── validator/
 │   │   └── routes/
-│   │       ├── subroute-2/
-│   │       │   └── subroute.route.ts
-│   │       ├── subroute-1/
-│   │       │   └── subroute.route.ts
-│   │       └── index.routes.ts
 │   ├── common/
 │   │   ├── handlers/
 │   │   ├── libs/
 │   │   └── middlewares/
 │   ├── config/
 │   └── index.ts
-├── .env
+└── .env
 ```
-## Contribuciones <a name="contribuciones"></a>
 
-Las contribuciones son bienvenidas. Puedes reportar errores, sugerir mejoras o enviar pull requests para nuevas funcionalidades. Por favor, abre un [issue](https://github.com/DeviantRacoon/techtonics-backend/issues) antes de trabajar en cambios significativos.
+---
 
-## Licencia <a name="licencia"></a>
+## Contribuciones
 
-Este proyecto está licenciado bajo la [Licencia Apache 2.0](LICENSE).
+Las contribuciones son bienvenidas. Abre un [issue](https://github.com/DeviantRacoon/techtonics-backend/issues) para reportar errores o proponer mejoras.
 
-## Contacto <a name="contacto"></a>
+---
 
-Para consultas, problemas o sugerencias, puedes contactarme a través de mi perfil de GitHub: [DeviantRacoon](https://github.com/DeviantRacoon).
+## Licencia
+
+Este proyecto está bajo la [Licencia Apache 2.0](LICENSE).
+
+---
+
+## Contacto
+
+Puedes contactarme en [DeviantRacoon](https://github.com/DeviantRacoon).
+

@@ -7,8 +7,6 @@ import roleRepository from "../infrastructure/repositories/role.repository";
 
 export const getRoles = requestHandler(async (req: Request) => {
   const { data, total } = await roleRepository.getRolesByParams(req.query);
-  console.log({ data, total });
-  
   return { data, total };
 });
 
@@ -20,6 +18,12 @@ export const getOneRole = requestHandler(async (req: Request) => {
 export const roleRegister = requestHandler(async (req: Request) => {
   const role = new Role(req.body);
   const result = await roleRepository.createRoleOrUpdate(role);
+  return result;
+});
+
+export const addPermissionToRole = requestHandler(async (req: Request) => {
+  const role = new Role(req.body);
+  const result = await roleRepository.addPermissionToRole(role);
   return result;
 });
 

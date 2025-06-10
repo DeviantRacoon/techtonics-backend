@@ -13,7 +13,7 @@ const AppDataSource = new DataSource({
   entities: ['src/**/infrastructure/entities/*.entity.ts'],
   migrations: ['src/common/database/migrations/*.ts'],
   synchronize: process.env.NODE_ENV === 'development', 
-  logging: process.env.NODE_ENV === 'development',
+  // logging: process.env.NODE_ENV === 'development',
 });
 
 export default AppDataSource;

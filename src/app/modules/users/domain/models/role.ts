@@ -18,7 +18,7 @@ export default class Role {
 
   @Type(() => Permission)
   @Expose()
-  permission?: Permission[];
+  permissions?: Permission[];
 
   constructor(data: Partial<Role>) {
     return plainToInstance(Role, data, { excludeExtraneousValues: true });

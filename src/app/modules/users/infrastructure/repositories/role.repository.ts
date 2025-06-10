@@ -1,10 +1,10 @@
 import Role from "../../domain/models/role";
+
 import { RoleEntity } from "../entities/role.entity";
+import { PermissionEntity } from "../entities/permission.entity";
 
 import { BaseRepository } from "@app/core/bases/base.repository";
 import { ResponseInterface } from "@app/core/interfaces";
-
-import Permission from "../../domain/models/permission";
 
 class RoleRepository extends BaseRepository<RoleEntity> {
   constructor() { super(RoleEntity, 'role') };
@@ -33,12 +33,21 @@ class RoleRepository extends BaseRepository<RoleEntity> {
     return await this.repository.save(role.toJSON());
   };
 
-  async addPermissionToRole(roleId: number, permissions: Permission[]) {
-    return await this.repository.update(roleId, {
-      permissions: permissions.map(permission => permission.toJSON())
+  async addPermissionToRole(role: Role) {
+    const { roleId, permissions } = role.toJSON();
+
+    return await this.repository.save({
+      roleId,
+      permissions
     });
   };
 
+  async existAllPermission(permissionIds: number[]): Promise<boolean> {
+    const permissions = await this.runRawQuery<PermissionEntity>(`
+      SELECT * FROM permissions WHERE permissionId IN (${permissionIds.join(',')})
+    `);
+    return permissions.length === permissionIds.length;
+  };
 }
 
 const roleRepository = new RoleRepository();

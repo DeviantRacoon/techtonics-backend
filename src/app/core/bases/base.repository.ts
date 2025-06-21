@@ -42,11 +42,15 @@ export abstract class BaseRepository<T extends ObjectLiteral> {
   }
 
 
-  async findOneByParams(filters: Record<string, any>): Promise<T | null> {
+  async findOneByParams(
+    options: { filters: Record<string, any>; forceJoins?: string[] }
+  ): Promise<T | null> {
     const qb = this.repository.createQueryBuilder(this.alias);
-    const { conditions, joins } = QueryBuilderCriteriaAdapter.parse(filters, this.alias);
+    const { conditions, joins } = QueryBuilderCriteriaAdapter.parse(options.filters, this.alias);
 
-    this.applyJoins(qb, joins);
+    const allJoins = new Set([...joins, ...(options.forceJoins || [])]);
+
+    this.applyJoins(qb, allJoins);
     this.applyConditions(qb, conditions);
 
     return qb.getOne();

@@ -21,6 +21,11 @@ export const roleRegister = requestHandler(async (req: Request) => {
   return result;
 });
 
+export const getPermissions = requestHandler(async (req: Request) => {
+  const result = await roleRepository.getPermissions();
+  return result;
+});
+
 export const addPermissionToRole = requestHandler(async (req: Request) => {
   const role = new Role(req.body);
   const result = await roleRepository.addPermissionToRole(role);

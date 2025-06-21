@@ -14,16 +14,21 @@ class UserSessionRepository extends BaseRepository<UserSessionEntity> {
       filters,
       page,
       limit,
-      orderBy
+      orderBy,
+      forceJoins: ['user']
     });
   };
 
-  async getOneUserSessionByParams(params: Record<string, any>): Promise<UserSessionEntity | null> {
-    return this.findOneByParams(params);
+  async getOneUserSessionByParams(filters: Record<string, any>): Promise<UserSessionEntity | null> {
+    return this.findOneByParams({ filters });
   };
 
-  async createUserSessionOrUpdate(userSession: UserSession): Promise<UserSessionEntity> {
-    return this.repository.save(userSession.toJSON());
+  async createUserSessionOrUpdate(userSession: any): Promise<UserSessionEntity> {
+    return this.repository.save(userSession);
+  };
+
+  async updateSessionByToken(token: string): Promise<void> {
+    await this.repository.update({ token }, { status: "ELIMINADO" });
   };
 }
 

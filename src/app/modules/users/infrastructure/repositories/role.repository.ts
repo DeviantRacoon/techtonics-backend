@@ -25,8 +25,8 @@ class RoleRepository extends BaseRepository<RoleEntity> {
     });
   };
 
-  async getOneRoleByParams(params: Record<string, any>): Promise<RoleEntity | null> {
-    return this.findOneByParams(params);
+  async getOneRoleByParams(filters: Record<string, any>): Promise<RoleEntity | null> {
+    return this.findOneByParams({ filters });
   };
 
   async createRoleOrUpdate(role: Role): Promise<RoleEntity> {
@@ -40,6 +40,12 @@ class RoleRepository extends BaseRepository<RoleEntity> {
       roleId,
       permissions
     });
+  };
+
+  async getPermissions() {
+    return await this.runRawQuery<PermissionEntity>(`
+      SELECT * FROM permissions
+    `);
   };
 
   async existAllPermission(permissionIds: number[]): Promise<boolean> {

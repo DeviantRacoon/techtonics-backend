@@ -18,8 +18,8 @@ class PersonRepository extends BaseRepository<PersonEntity> {
     });
   };
 
-  async getOnePersonByParams(params: Record<string, any>): Promise<PersonEntity | null> {
-    return this.findOneByParams(params);
+  async getOnePersonByParams(filters: Record<string, any>): Promise<PersonEntity | null> {
+    return this.findOneByParams({ filters });
   };
 
   async createPersonOrUpdate(person: Person): Promise<PersonEntity> {

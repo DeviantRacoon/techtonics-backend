@@ -37,8 +37,10 @@ export class UserEntity {
   @UpdateDateColumn()
   updatedAt!: Date;
 
-  @ManyToOne(() => PersonEntity, person => person.users, { cascade: ["update"] })
-  @JoinColumn({ name: "personId" })
+  @ManyToOne(() => PersonEntity, person => person.users, {
+    cascade: ["insert", "update"],
+    eager: true
+  })
   person?: PersonEntity;
 
   @ManyToOne(() => RoleEntity, role => role.users)

@@ -1,4 +1,5 @@
 import { Expose, Transform, Type, plainToInstance, instanceToPlain } from "class-transformer";
+import { format, parseISO } from "date-fns";
 
 import User from "./user";
 
@@ -16,7 +17,7 @@ export default class Person {
   @Expose() createdAt?: string;
   @Expose() updatedAt?: string;
 
-  @Transform(({ value }) => (value ? new Date(value).toISOString() : null))
+  @Transform(({ value }) => (value ? format(new Date(value), 'yyyy-MM-dd') : null))
   @Expose()
   birthdate?: string;
 

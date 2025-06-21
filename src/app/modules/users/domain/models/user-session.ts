@@ -6,7 +6,6 @@ type SESSION_STATUS = "ACTIVO" | "ELIMINADO" | "BANEADO";
 
 export default class UserSession {
   @Expose() sessionId?: number;
-  @Expose() userId?: number;
   @Expose() token?: string;
   @Expose() device?: string;
   @Expose() ip?: string;
@@ -29,3 +28,4 @@ export default class UserSession {
     );
   }
 }
+

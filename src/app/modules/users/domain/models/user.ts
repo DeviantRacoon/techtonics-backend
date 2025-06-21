@@ -10,6 +10,7 @@ export default class User {
   @Expose() public personId?: number;
   @Expose() public roleId?: number;
   @Expose() public email?: string;
+  @Transform(({ value }) => (value === "" ? undefined : value))
   @Expose() public password?: string;
   @Expose() public code?: string;
   @Expose() public status?: STATUS;

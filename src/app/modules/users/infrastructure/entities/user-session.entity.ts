@@ -21,7 +21,7 @@ export class UserSessionEntity {
   @Column({ nullable: true })
   ip?: string;
 
-  @Column({ type: "timestamp" })
+  @Column({ type: "timestamp", nullable: true })
   expiresAt!: Date;
 
   @Column({ type: "enum", enum: STATUS, default: "ACTIVO" })

@@ -10,7 +10,7 @@ indexRouter.get("/", (req, res) => {
   res.status(200).json({ message: "Ruta de index" });
 });
 
-indexRouter.use("/session", sessionRouter);
+indexRouter.use("/sessions", sessionRouter);
 indexRouter.use("/api-creator", apiCreatorRouter);
 indexRouter.use("/auth", authRouter);
 

@@ -10,16 +10,29 @@ class UserRepository extends BaseRepository<UserEntity> {
   async getUsersByParams(params: Record<string, any>): Promise<ResponseInterface<UserEntity>> {
     const { page, limit, orderBy, ...filters } = params;
 
+    this.joinConfig = {
+      person: "left"
+    };
+
     return this.findAllByParams({
       filters,
       page,
       limit,
-      orderBy
+      orderBy,
+      forceJoins: ['role', 'person']
     });
   };
 
   async getOneUserByParams(params: Record<string, any>): Promise<UserEntity | null> {
-    return this.findOneByParams(params);
+    this.joinConfig = {
+      "role.permissions": "left",
+      person: "left"
+    };
+
+    return this.findOneByParams({
+      filters: params,
+      forceJoins: ['role.permissions', 'person']
+    });
   };
 
   async createUserWithPerson(user: User) {
@@ -33,16 +46,22 @@ class UserRepository extends BaseRepository<UserEntity> {
   };
 
   async updateUserWithPerson(user: User) {
-    const { person, userId, roleId, ...userParams } = user.toJSON();
+    const { person, userId, role, ...userParams } = user.toJSON();
 
-    const result = await this.repository.save({
+    const result = await this.repository.preload({
       userId,
       ...userParams,
       person: {
         ...person,
       },
-      role: roleId ? { roleId } : undefined
+      role: role?.roleId ? { roleId: role.roleId } : undefined
     });
+
+    if (!result) {
+      throw new Error('El usuario no existe.');
+    }
+
+    await this.repository.save(result);
 
     return result;
   };

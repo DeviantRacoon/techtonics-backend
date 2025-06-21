@@ -4,7 +4,7 @@ import { requestHandler } from "@core/bases/base.services";
 import UserSession from "../domain/models/user-session";
 import userSessionRepository from "../infrastructure/repositories/user-session.repository";
 
-import { addDays } from "date-fns";
+import { addHours } from "date-fns";
 
 export const getSessions = requestHandler(async (req: Request) => {
   const { data, total } = await userSessionRepository.getUserSessionsByParams(req.query);
@@ -24,6 +24,14 @@ export const closeSession = requestHandler(async (req: Request) => {
   return session;
 });
 
+export const closeOneSession = requestHandler(async (req: Request) => {
+  const token = req.headers['authorization'];
+  if (!token)  return;
+  
+  await userSessionRepository.updateSessionByToken(token);
+  return;
+});
+
 export const banSession = requestHandler(async (req: Request) => {
   const session = new UserSession(req.body);
   session.status = "BANEADO";
@@ -33,14 +41,14 @@ export const banSession = requestHandler(async (req: Request) => {
 });
 
 export const createSession = async (req: Request, userId: number, token: string) => {
-  const session = new UserSession({
-    userId,
+  const session = {
+    user: { userId },
     token,
     ip: req.ip || "S/N",
     device: req.headers["user-agent"] || "S/N",
     status: "ACTIVO",
-    expiresAt: addDays(new Date(), 7).toISOString(),
-  });
+    expiresAt: addHours(new Date(), 4).toISOString(),
+  };
 
   await userSessionRepository.createUserSessionOrUpdate(session);
   return session;

@@ -10,18 +10,21 @@ const EXCLUDE_ROUTES = ['/api/auth/login', '/'];
 const UNAUTHORIZED_MESSAGE = "Access Denied: Unauthorized access. Please provide a valid token.";
 
 const validateTokens = async (token: string) => {
-  const tokenSession = await userSessionRepository.getOneUserSessionByParams({ token, status: 'active' });
+  const tokenSession = await userSessionRepository.getOneUserSessionByParams({ token, status: 'ACTIVO' });
 
   if (!tokenSession) {
     return { valid: false, message: UNAUTHORIZED_MESSAGE };
   }
 
   const tokenData = verifyToken(token);
+
   if (tokenData.error) {
+    await userSessionRepository.createUserSessionOrUpdate({ ...tokenSession, status: 'ELIMINADO' });
     return { valid: false, message: `Token verification failed: ${tokenData.error}` };
   }
 
-  if (tokenData.error !== 'TokenExpiredError') {
+  if (tokenData.error && tokenData.error !== 'TokenExpiredError') {
+    await userSessionRepository.createUserSessionOrUpdate({ ...tokenSession, status: 'ELIMINADO' });
     return { valid: false, message: UNAUTHORIZED_MESSAGE };
   }
 
@@ -29,9 +32,9 @@ const validateTokens = async (token: string) => {
 };
 
 const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-  if (process.env.NODE_ENV === 'development') {
-    return next();
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   return next();
+  // }
 
   if (EXCLUDE_ROUTES.includes(req.path)) return next();
 

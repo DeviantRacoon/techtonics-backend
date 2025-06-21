@@ -11,7 +11,7 @@ export class QueryBuilderCriteriaAdapter {
     filters: Record<string, any>,
     rootAlias: string
   ): { conditions: QueryBuilderCondition[]; joins: Set<string> } {
-    
+
     const conditions: QueryBuilderCondition[] = [];
     const joins = new Set<string>();
 

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { requestHandler, customErrorHandler } from "@core/bases/base.services";
+import { Cacheable } from "@libs/cacheable";
 
 import User from "../domain/models/user";
 import userRepository from "../infrastructure/repositories/user.repository";
@@ -10,15 +11,22 @@ import { createSession } from "./session.service";
 import { hashPassword, comparePassword } from "@libs/bcrypt";
 import { generateToken } from "@libs/token";
 
-export const getUser = requestHandler(async (req: Request) => {
-  const { data, total } = await userRepository.getUsersByParams(req.query);
-  return { data, total };
-});
+class UserService {
+  @Cacheable({ keyPrefix: 'users', ttl: 60 })
+  static async getUser(req: Request) {
+    const { data, total } = await userRepository.getUsersByParams(req.query);
+    return { data, total };
+  }
 
-export const getOneUser = requestHandler(async (req: Request) => {
-  const user = await userRepository.getOneUserByParams(req.query);
-  return user;
-});
+  @Cacheable({ keyPrefix: 'user', idParam: 'userId', ttl: 60 })
+  static async getOneUser(req: Request) {
+    const user = await userRepository.getOneUserByParams(req.query);
+    return user;
+  }
+}
+
+export const getUser = requestHandler(UserService.getUser);
+export const getOneUser = requestHandler(UserService.getOneUser);
 
 export const userRegister = requestHandler(async (req: Request) => {
   const user = new User(req.body);

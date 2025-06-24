@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 import AppDataSource from '@config/typeorm';
 import { ServerExpress } from '@config/server';
+import '@config/redis';
 
 import logger from '@libs/logger';
 

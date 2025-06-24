@@ -1,55 +1,95 @@
-import { Request } from "express";
+import { Request, Response, NextFunction } from "express";
 import { requestHandler } from "@core/bases/base.services";
+import { Cacheable } from "@libs/cacheable";
 
 import UserSession from "../domain/models/user-session";
 import userSessionRepository from "../infrastructure/repositories/user-session.repository";
 
 import { addHours } from "date-fns";
 
-export const getSessions = requestHandler(async (req: Request) => {
-  const { data, total } = await userSessionRepository.getUserSessionsByParams(req.query);
-  return { data, total };
-});
+export default class SessionService {
+  @requestHandler
+  @Cacheable({ keyPrefix: "sessions", ttl: 60 })
+  static async getSessions(
+    this: void,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { data, total } = await userSessionRepository.getUserSessionsByParams(req.query);
+    return { data, total };
+  }
 
-export const getOneUser = requestHandler(async (req: Request) => {
-  const session = await userSessionRepository.getOneUserSessionByParams(req.query);
-  return session;
-});
+  @requestHandler
+  @Cacheable({ keyPrefix: "session", idParam: "userId", ttl: 60 })
+  static async getOneUser(
+    this: void,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const session = await userSessionRepository.getOneUserSessionByParams(req.query);
+    return session;
+  }
 
-export const closeSession = requestHandler(async (req: Request) => {
-  const session = new UserSession(req.body);
-  session.status = "ELIMINADO";
+  @requestHandler
+  static async closeSession(
+    this: void,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const session = new UserSession(req.body);
+    session.status = "ELIMINADO";
 
-  await userSessionRepository.createUserSessionOrUpdate(session);
-  return session;
-});
+    await userSessionRepository.createUserSessionOrUpdate(session);
+    return session;
+  }
 
-export const closeOneSession = requestHandler(async (req: Request) => {
-  const token = req.headers['authorization'];
-  if (!token)  return;
-  
-  await userSessionRepository.updateSessionByToken(token);
-  return;
-});
+  @requestHandler
+  static async closeOneSession(
+    this: void,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const token = req.headers["authorization"];
+    if (!token) return;
 
-export const banSession = requestHandler(async (req: Request) => {
-  const session = new UserSession(req.body);
-  session.status = "BANEADO";
+    await userSessionRepository.updateSessionByToken(token as string);
+    return;
+  }
 
-  await userSessionRepository.createUserSessionOrUpdate(session);
-  return session;
-});
+  @requestHandler
+  static async banSession(
+    this: void,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const session = new UserSession(req.body);
+    session.status = "BANEADO";
 
-export const createSession = async (req: Request, userId: number, token: string) => {
-  const session = {
-    user: { userId },
-    token,
-    ip: req.ip || "S/N",
-    device: req.headers["user-agent"] || "S/N",
-    status: "ACTIVO",
-    expiresAt: addHours(new Date(), 4).toISOString(),
-  };
+    await userSessionRepository.createUserSessionOrUpdate(session);
+    return session;
+  }
 
-  await userSessionRepository.createUserSessionOrUpdate(session);
-  return session;
-};
+  static async createSession(
+    this: void,
+    req: Request,
+    userId: number,
+    token: string
+  ) {
+    const session = {
+      user: { userId },
+      token,
+      ip: req.ip || "S/N",
+      device: req.headers["user-agent"] || "S/N",
+      status: "ACTIVO",
+      expiresAt: addHours(new Date(), 4).toISOString(),
+    };
+
+    await userSessionRepository.createUserSessionOrUpdate(session);
+    return session;
+  }
+}

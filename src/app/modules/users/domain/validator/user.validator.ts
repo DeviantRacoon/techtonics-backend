@@ -133,6 +133,20 @@ export const updateUserSchema = [
     .optional()
 ];
 
+export const updateBusinessUnitsToUserSchema = [
+  body('userId')
+    .notEmpty().withMessage('El id es requerido.')
+    .custom(existUser).withMessage('El usuario no existe.')
+    .isNumeric().withMessage('El id debe ser un número.'),
+
+  body('businessUnits')
+    .notEmpty().withMessage('Las unidades de negocio son requeridas.')
+    .isArray().withMessage('Las unidades de negocio son requeridas.'),
+
+  body('businessUnits.*.businessUnitId')
+    .isNumeric().withMessage('El id de la unidad de negocio debe ser un número.'),
+];
+
 export const loginSchema = [
   body('*').custom(isIpBanned).withMessage('La IP fue bloqueada'),
   body('email')

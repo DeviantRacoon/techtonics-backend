@@ -32,9 +32,9 @@ const validateTokens = async (token: string) => {
 };
 
 const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-  // if (process.env.NODE_ENV === 'development') {
-  //   return next();
-  // }
+  if (process.env.NODE_ENV === 'development') {
+    return next();
+  }
 
   if (EXCLUDE_ROUTES.includes(req.path)) return next();
 

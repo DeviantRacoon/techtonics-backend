@@ -56,4 +56,9 @@ export const login = requestHandler(async (req: Request, res: Response) => {
   return { ...user, token };
 });
 
+export const updateBusinessUnitsToUser = requestHandler(async (req: Request) => {
+  const { userId, businessUnits } = req.body;
+  await userRepository.updateBusinessUnitsOfUser(userId, businessUnits);
 
+  return { message: "Se actualizaron los datos del usuario correctamente." };
+});

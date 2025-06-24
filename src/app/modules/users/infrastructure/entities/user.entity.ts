@@ -1,8 +1,9 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 import { PersonEntity } from "./person.entity";
 import { RoleEntity } from "./role.entity";
 import { UserSessionEntity } from "./user-session.entity";
+import { BusinessUnitEntity } from "./business-unit.entity";
 
 export enum STATUS {
   ACTIVO = "ACTIVO",
@@ -49,4 +50,22 @@ export class UserEntity {
 
   @OneToMany(() => UserSessionEntity, session => session.user)
   sessions?: UserSessionEntity[];
+
+  @ManyToMany(() => BusinessUnitEntity, businessUnit => businessUnit.users, {
+    cascade: true,
+    eager: true
+  })
+  @JoinTable({
+    name: "user_business_unit",
+    joinColumn: {
+      name: "user_id",
+      referencedColumnName: "userId"
+    },
+    inverseJoinColumn: {
+      name: "business_unit_id",
+      referencedColumnName: "businessUnitId"
+    }
+  })
+  businessUnits?: BusinessUnitEntity[];
+
 }

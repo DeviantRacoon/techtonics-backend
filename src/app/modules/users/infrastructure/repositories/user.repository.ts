@@ -11,7 +11,8 @@ class UserRepository extends BaseRepository<UserEntity> {
     const { page, limit, orderBy, ...filters } = params;
 
     this.joinConfig = {
-      person: "left"
+      person: "left",
+      businessUnits: "left"
     };
 
     return this.findAllByParams({
@@ -19,19 +20,20 @@ class UserRepository extends BaseRepository<UserEntity> {
       page,
       limit,
       orderBy,
-      forceJoins: ['role', 'person']
+      forceJoins: ['role', 'person', 'businessUnits']
     });
   };
 
   async getOneUserByParams(params: Record<string, any>): Promise<UserEntity | null> {
     this.joinConfig = {
       "role.permissions": "left",
-      person: "left"
+      person: "left",
+      businessUnits: "left"
     };
 
     return this.findOneByParams({
       filters: params,
-      forceJoins: ['role.permissions', 'person']
+      forceJoins: ['role.permissions', 'person', 'businessUnits']
     });
   };
 
@@ -49,7 +51,7 @@ class UserRepository extends BaseRepository<UserEntity> {
     const { person, userId, role, ...userParams } = user.toJSON();
 
     const result = await this.repository.preload({
-      userId,
+      userId: userId,
       ...userParams,
       person: {
         ...person,
@@ -66,7 +68,33 @@ class UserRepository extends BaseRepository<UserEntity> {
     return result;
   };
 
-}
+  async updateBusinessUnitsOfUser(userId: number, businessUnitIds: any) {
+    const user = await this.repository.findOne({
+      where: { userId },
+      relations: ['businessUnits']
+    });
+
+    await this.repository
+      .createQueryBuilder()
+      .relation('UserEntity', 'businessUnits')
+      .of(userId)
+      .remove(user?.businessUnits ?? []);
+
+    if (businessUnitIds.length > 0) {
+      await this.repository
+        .createQueryBuilder()
+        .relation('UserEntity', 'businessUnits')
+        .of(userId)
+        .add(businessUnitIds);
+    }
+
+    return await this.repository.findOne({
+      where: { userId },
+      relations: ['businessUnits']
+    });
+  }
+
+};
 
 const userRepository = new UserRepository();
 export default userRepository;

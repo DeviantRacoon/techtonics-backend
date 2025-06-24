@@ -1,15 +1,15 @@
 import { Router } from 'express';
 import { validate } from '@middlewares/validator.middleware';
 
-import { getUser, getOneUser, userRegister, userUpdate, updateBusinessUnitsToUser } from '@modules/users/services/user.service';
+import UserService from '@modules/users/services/user.service';
 import { createUserSchema, updateUserSchema, updateBusinessUnitsToUserSchema } from '@modules/users/domain/validator/user.validator';
 
 const userRouter = Router();
 
-userRouter.get('/', getUser);
-userRouter.get('/unique', getOneUser);
-userRouter.post('/', validate(createUserSchema), userRegister);
-userRouter.put('/', validate(updateUserSchema), userUpdate);
-userRouter.put('/business-units', validate(updateBusinessUnitsToUserSchema), updateBusinessUnitsToUser);
+userRouter.get('/', UserService.getUser as any);
+userRouter.get('/unique', UserService.getOneUser as any);
+userRouter.post('/', validate(createUserSchema), UserService.userRegister as any);
+userRouter.put('/', validate(updateUserSchema), UserService.userUpdate as any);
+userRouter.put('/business-units', validate(updateBusinessUnitsToUserSchema), UserService.updateBusinessUnitsToUser as any);
 
 export default userRouter;

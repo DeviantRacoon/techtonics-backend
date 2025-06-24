@@ -9,32 +9,53 @@ export function customErrorHandler(
 }
 
 export function requestHandler(
-  fn: (req: Request, res: Response, next: NextFunction) => any
+  _target: any,
+  _propertyKey: string,
+  descriptor: PropertyDescriptor
 ) {
-  return async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const data = await fn(req, res, next);
-      if (data !== undefined) {
+  const fn = descriptor.value;
 
-        const response: { ok: boolean, data?: any, total?: number, message?: string } = { ok: true };
+  descriptor.value = async function (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const data = await fn.apply(this, [req, res, next]);
+      if (data !== undefined) {
+        const response: {
+          ok: boolean;
+          data?: any;
+          total?: number;
+          message?: string;
+        } = { ok: true };
 
         response.data = data && data.total !== undefined ? data.data : data;
-        response.total = data ? data.total : undefined;
+        response.total = data ? (data.total as number | undefined) : undefined;
         response.message = data && data.message ? data.message : undefined;
 
         sanitizeWithNonResponseFields(response.data);
         res.status(200).json(response);
+      } else {
+        res.status(204).end();
       }
-      res.status(204).end();
     } catch (error: any) {
       if (error.message && error.statusCode) {
-        res.status(error.statusCode).json({ ok: false, message: error.message });
+        res
+          .status(error.statusCode)
+          .json({ ok: false, message: error.message });
       } else {
         logger.error(`Error capturado: ${error}`);
-        res.status(500).json({ ok: false, message: "Lo sentimos, ha ocurrido un error, nuestro equipo lo esta trabajando. Por favor, intente mas tarde." });
+        res.status(500).json({
+          ok: false,
+          message:
+            "Lo sentimos, ha ocurrido un error, nuestro equipo lo esta trabajando. Por favor, intente mas tarde.",
+        });
       }
     }
   };
+
+  return descriptor;
 }
 
 const nonResponseFields = ['password'];

@@ -28,6 +28,7 @@
     "express-validator": "^7.2.1",
     "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.1",
+    "redis": "^4.6.7",
     "reflect-metadata": "^0.2.2",
     "tsconfig-paths": "^4.2.0",
     "typeorm": "^0.3.24"

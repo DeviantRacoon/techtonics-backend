@@ -46,6 +46,7 @@
 - **TypeORM** (MySQL por defecto)
 - **JWT (jsonwebtoken)**
 - **Bcryptjs**
+- **Redis**
 - **PM2**
 
 ---
@@ -55,6 +56,7 @@
 - Gestión de usuarios, roles y sesiones.
 - Middlewares globales para logging, autenticación y manejo de errores.
 - Repositorios y servicios basados en TypeORM.
+- Cacheo de respuestas en Redis mediante decoradores.
 - Migraciones de base de datos con TypeORM CLI.
 - Dockerfile y docker-compose para ambiente local.
 
@@ -110,6 +112,9 @@ JWT_SECRET="mysecret"
 JWT_REFRESH_SECRET="myrefresh"
 TOKEN_EXPIRATION=10m
 REFRESH_TOKEN_EXPIRATION=7d
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=
 ```
 
 ---

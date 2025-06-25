@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { requestHandler } from "@core/bases/base.services";
-import { Cacheable } from "@libs/cacheable";
+import { RequestHandler } from "@core/bases/base.services";
+import { Cacheable, InvalidateCache } from "@libs/cacheable";
 
 import UserSession from "../domain/models/user-session";
 import userSessionRepository from "../infrastructure/repositories/user-session.repository";
@@ -8,7 +8,7 @@ import userSessionRepository from "../infrastructure/repositories/user-session.r
 import { addHours } from "date-fns";
 
 export default class SessionService {
-  @requestHandler
+  @RequestHandler
   @Cacheable({ keyPrefix: "sessions", ttl: 60 })
   static async getSessions(
     this: void,
@@ -20,7 +20,7 @@ export default class SessionService {
     return { data, total };
   }
 
-  @requestHandler
+  @RequestHandler
   @Cacheable({ keyPrefix: "session", idParam: "userId", ttl: 60 })
   static async getOneUser(
     this: void,
@@ -32,7 +32,8 @@ export default class SessionService {
     return session;
   }
 
-  @requestHandler
+  @RequestHandler
+  @InvalidateCache({ keys: (req: Request) => ['sessions', `session:${req.body.userId}`] })
   static async closeSession(
     this: void,
     req: Request,
@@ -46,7 +47,8 @@ export default class SessionService {
     return session;
   }
 
-  @requestHandler
+  @RequestHandler
+  @InvalidateCache({ keys: ['sessions'] })
   static async closeOneSession(
     this: void,
     req: Request,
@@ -60,7 +62,8 @@ export default class SessionService {
     return;
   }
 
-  @requestHandler
+  @RequestHandler
+  @InvalidateCache({ keys: (req: Request) => ['sessions', `session:${req.body.userId}`] })
   static async banSession(
     this: void,
     req: Request,

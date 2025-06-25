@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { requestHandler } from '@core/bases/base.services';
+import { RequestHandler } from '@core/bases/base.services';
 
 interface UploadedFileInfo {
   originalname: string;
@@ -7,7 +7,7 @@ interface UploadedFileInfo {
 }
 
 export default class FileService {
-  @requestHandler
+  @RequestHandler
   static async upload(
     this: void,
     req: Request,

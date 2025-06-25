@@ -8,7 +8,7 @@ export function customErrorHandler(
   throw { message, statusCode };
 }
 
-export function requestHandler(
+export function RequestHandler(
   _target: any,
   _propertyKey: string,
   descriptor: PropertyDescriptor

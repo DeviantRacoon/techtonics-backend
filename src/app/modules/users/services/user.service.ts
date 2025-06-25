@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { requestHandler, customErrorHandler } from "@core/bases/base.services";
-import { Cacheable } from "@libs/cacheable";
+import { RequestHandler, customErrorHandler } from "@core/bases/base.services";
+import { Cacheable, InvalidateCache } from "@libs/cacheable";
 
 import User from "../domain/models/user";
 import userRepository from "../infrastructure/repositories/user.repository";
@@ -12,7 +12,7 @@ import { hashPassword, comparePassword } from "@libs/bcrypt";
 import { generateToken } from "@libs/token";
 
 export default class UserService {
-  @requestHandler
+  @RequestHandler
   @Cacheable({ keyPrefix: "users", ttl: 60 })
   static async getUser(
     this: void,
@@ -24,7 +24,7 @@ export default class UserService {
     return { data, total };
   }
 
-  @requestHandler
+  @RequestHandler
   @Cacheable({ keyPrefix: "user", idParam: "userId", ttl: 60 })
   static async getOneUser(
     this: void,
@@ -36,7 +36,8 @@ export default class UserService {
     return user;
   }
 
-  @requestHandler
+  @RequestHandler
+  @InvalidateCache({ keys: ['users'] })
   static async userRegister(
     this: void,
     req: Request,
@@ -51,7 +52,8 @@ export default class UserService {
     return { message: "Usuario creado con éxito" };
   }
 
-  @requestHandler
+  @RequestHandler
+  @InvalidateCache({ keys: (req: Request) => ['users', `user:${req.body.userId}`] })
   static async userUpdate(
     this: void,
     req: Request,
@@ -66,7 +68,7 @@ export default class UserService {
     return { message: "Se actualizo el usuario correctamente." };
   }
 
-  @requestHandler
+  @RequestHandler
   static async login(
     this: void,
     req: Request,
@@ -96,7 +98,8 @@ export default class UserService {
     return { ...user, token };
   }
 
-  @requestHandler
+  @RequestHandler
+  @InvalidateCache({ keys: (req: Request) => ['users', `user:${req.body.userId}`] })
   static async updateBusinessUnitsToUser(
     this: void,
     req: Request,

@@ -150,3 +150,5 @@ prisma/dev.db
 node_modules/
 .pnpm-debug.log
 pnpm-lock.yaml
+
+public/uploads

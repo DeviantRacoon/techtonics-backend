@@ -5,6 +5,8 @@ import { Cacheable, InvalidateCache } from "@libs/cacheable";
 import BusinessUnit from "../domain/models/business-unit";
 import businessUnitRepository from "../infrastructure/repositories/business-unit.repository";
 
+import { saveFile } from "@libs/file";
+
 export default class BusinessUnitService {
   @RequestHandler
   @Cacheable({ keyPrefix: "businessUnits", ttl: 60 })
@@ -23,7 +25,11 @@ export default class BusinessUnitService {
   @RequestHandler
   @InvalidateCache({ keys: ['businessUnits'] })
   static async businessUnitRegister(this: void, req: Request, res: Response, next: NextFunction) {
+    const [file] = (req as any).files as { originalname: string; buffer: Buffer }[];
+
     const businessUnit = new BusinessUnit(req.body);
+    businessUnit.businessUnitLogo = await saveFile(file);
+    
     const result = await businessUnitRepository.createBusinessUnitOrUpdate(businessUnit);
     return result;
   }

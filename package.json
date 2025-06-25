@@ -31,8 +31,7 @@
     "redis": "^4.6.7",
     "reflect-metadata": "^0.2.2",
     "tsconfig-paths": "^4.2.0",
-    "typeorm": "^0.3.24",
-    "multer": "^1.4.5-lts.1"
+    "typeorm": "^0.3.24"
   },
   "devDependencies": {
     "@types/cors": "^2.8.18",
@@ -46,7 +45,6 @@
     "nodemon": "^3.1.10",
     "pm2": "^5.4.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3",
-    "@types/multer": "^1.4.7"
+    "typescript": "^5.8.3"
   }
 }

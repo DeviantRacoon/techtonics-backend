@@ -59,6 +59,7 @@
 - Cacheo de respuestas en Redis mediante decoradores.
 - Migraciones de base de datos con TypeORM CLI.
 - Dockerfile y docker-compose para ambiente local.
+- Soporte para formularios multipart/form-data y subida de archivos.
 
 ---
 

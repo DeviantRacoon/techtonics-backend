@@ -8,7 +8,6 @@ import notFoundMiddleware from "@middlewares/404.middleware";
 import authMiddleware from "@middlewares/jwt.middleware";
 import loggerMiddleware from "@middlewares/logger.middleware";
 import cleanUndefinedQueryMiddleware from "@middlewares/clean.middleware";
-import multipartMiddleware from "@middlewares/multipart.middleware";
 
 dotenv.config();
 
@@ -26,9 +25,7 @@ export class ServerExpress {
   private initializeMiddlewares() {
     this.app.use(corsConfig);
     this.app.use(express.json());
-    this.app.use(express.urlencoded({ extended: true }));
     this.app.use(express.static("public"));
-    this.app.use(multipartMiddleware);
     this.app.use(loggerMiddleware);
     this.app.use(cleanUndefinedQueryMiddleware);
     this.app.use(responseMiddleware);

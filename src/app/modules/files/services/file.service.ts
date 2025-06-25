@@ -1,11 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { RequestHandler } from '@core/bases/base.services';
+import { FileBuffer, saveFile } from '@libs/file';
 
-interface UploadedFileInfo {
-  originalname: string;
-  path: string;
-}
-
+interface UploadedFileInfo extends FileBuffer {}
 export default class FileService {
   @RequestHandler
   static async upload(
@@ -18,6 +15,13 @@ export default class FileService {
     if (!files || files.length === 0) {
       throw { message: 'Archivo no proporcionado', statusCode: 400 };
     }
-    return { files };
+
+    const saved = [] as { originalname: string; path: string }[];
+    for (const file of files) {
+      const filePath = await saveFile(file);
+      saved.push({ originalname: file.originalname, path: filePath });
+    }
+
+    return { files: saved };
   }
 }

@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 import { UserEntity } from "./user.entity";
+import { ProductEntity } from "@modules/storage/infrastructure/entities/product.entity";
 
 export enum STATUS {
   ACTIVO = "ACTIVO",
@@ -30,4 +31,7 @@ export class BusinessUnitEntity {
 
   @ManyToMany(() => UserEntity, user => user.businessUnits)
   users?: UserEntity[];
+
+  @OneToMany(() => ProductEntity, product => product.businessUnit)
+  products?: ProductEntity[];
 }

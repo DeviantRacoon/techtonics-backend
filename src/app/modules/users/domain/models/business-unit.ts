@@ -1,4 +1,4 @@
-import { Expose, Type, plainToInstance, instanceToPlain } from "class-transformer";
+import { Expose, Type, plainToInstance, instanceToPlain, Transform } from "class-transformer";
 
 import User from "./user";
 

@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
+
 import { UserEntity } from '@modules/users/infrastructure/entities/user.entity';
 import { BusinessUnitEntity } from '@modules/users/infrastructure/entities/business-unit.entity';
 
@@ -18,17 +19,36 @@ export class ProductEntity {
   @PrimaryGeneratedColumn()
   productId!: number;
 
-  @Column({ length: 128 })
+  @Column({ length: 64 })
   productName!: string;
 
-  @Column({ length: 512 })
+  @Column({ length: 128 })
+  productDescription!: string;
+
+  @Column({ length: 512, nullable: true })
   productImage!: string;
+
+  @Column({ length: 16, nullable: true })
+  productCode?: string;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  productPrice!: number;
 
   @Column({ type: 'enum', enum: TYPE })
   type!: string;
 
-  @Column('int')
+  @Column('int', { default: 0 })
   stock!: number;
+
+  @ManyToOne(() => UserEntity, user => user.products)
+  createdBy!: UserEntity;
+
+  @Column({ nullable: true })
+  businessUnitId?: number
+
+  @ManyToOne(() => BusinessUnitEntity, bu => bu.products)
+  @JoinColumn({ name: "businessUnitId" })
+  businessUnit!: BusinessUnitEntity
 
   @Column({ type: 'enum', enum: STATUS, default: STATUS.ACTIVO })
   status!: string;
@@ -38,10 +58,4 @@ export class ProductEntity {
 
   @UpdateDateColumn()
   updatedAt!: Date;
-
-  @ManyToOne(() => UserEntity, user => user.products, { eager: true })
-  createdBy!: UserEntity;
-
-  @ManyToOne(() => BusinessUnitEntity, bu => bu.products, { eager: true })
-  businessUnit!: BusinessUnitEntity;
 }

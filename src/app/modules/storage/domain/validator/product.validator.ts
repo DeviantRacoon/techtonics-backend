@@ -15,9 +15,6 @@ export const createProductSchema = [
   body('type')
     .notEmpty().withMessage('El tipo es requerido.')
     .isIn(['ALMACEN', 'SERVICIO']).withMessage('Tipo no válido.'),
-  body('stock')
-    .notEmpty().withMessage('El stock es requerido.')
-    .isNumeric().withMessage('El stock debe ser numérico.')
 ];
 
 export const updateProductSchema = [

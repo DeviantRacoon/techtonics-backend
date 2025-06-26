@@ -44,7 +44,8 @@ export default class RoleService {
   }
 
   @RequestHandler
-  @InvalidateCache({ keys: (req: Request) => ['roles', `role:${req.body.roleId}`] })
+  // @InvalidateCache({ keys: (req: Request) => ['roles', `role:${req.body.roleId}`] })
+  @InvalidateCache({ keys: ['roles'] })
   static async roleUpdate(this: void, req: Request, res: Response, next: NextFunction) {
     const role = new Role(req.body);
     const result = await roleRepository.createRoleOrUpdate(role);

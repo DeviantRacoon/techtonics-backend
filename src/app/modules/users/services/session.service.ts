@@ -9,7 +9,6 @@ import { addHours } from "date-fns";
 
 export default class SessionService {
   @RequestHandler
-  @Cacheable({ keyPrefix: "sessions", ttl: 60 })
   static async getSessions(
     this: void,
     req: Request,
@@ -21,7 +20,6 @@ export default class SessionService {
   }
 
   @RequestHandler
-  @Cacheable({ keyPrefix: "session", idParam: "userId", ttl: 60 })
   static async getOneUser(
     this: void,
     req: Request,
@@ -33,7 +31,6 @@ export default class SessionService {
   }
 
   @RequestHandler
-  @InvalidateCache({ keys: (req: Request) => ['sessions', `session:${req.body.userId}`] })
   static async closeSession(
     this: void,
     req: Request,
@@ -48,7 +45,6 @@ export default class SessionService {
   }
 
   @RequestHandler
-  @InvalidateCache({ keys: ['sessions'] })
   static async closeOneSession(
     this: void,
     req: Request,
@@ -63,7 +59,6 @@ export default class SessionService {
   }
 
   @RequestHandler
-  @InvalidateCache({ keys: (req: Request) => ['sessions', `session:${req.body.userId}`] })
   static async banSession(
     this: void,
     req: Request,

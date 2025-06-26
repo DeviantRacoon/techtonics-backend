@@ -29,13 +29,14 @@ export default class BusinessUnitService {
 
     const businessUnit = new BusinessUnit(req.body);
     businessUnit.businessUnitLogo = await saveFile(file);
-    
+
     const result = await businessUnitRepository.createBusinessUnitOrUpdate(businessUnit);
     return result;
   }
 
   @RequestHandler
-  @InvalidateCache({ keys: (req: Request) => ['businessUnits', `businessUnit:${req.body.businessUnitId}`] })
+  // @InvalidateCache({ keys: (req: Request) => ['businessUnits', `businessUnit:${req.body.businessUnitId}`] })
+  @InvalidateCache({ keys: ['businessUnits'] })
   static async businessUnitUpdate(this: void, req: Request, res: Response, next: NextFunction) {
     const businessUnit = new BusinessUnit(req.body);
     const result = await businessUnitRepository.createBusinessUnitOrUpdate(businessUnit);

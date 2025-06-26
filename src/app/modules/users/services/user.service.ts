@@ -53,7 +53,7 @@ export default class UserService {
   }
 
   @RequestHandler
-  @InvalidateCache({ keys: (req: Request) => ['users', `user:${req.body.userId}`] })
+  @InvalidateCache({ keys: ['users'] })
   static async userUpdate(
     this: void,
     req: Request,

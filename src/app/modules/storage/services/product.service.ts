@@ -14,7 +14,7 @@ export default class ProductService {
   }
 
   @RequestHandler
-  @Cacheable({ keyPrefix: 'product', idParam: 'productId', ttl: 60 })
+  @Cacheable({ keyPrefix: 'products', idParam: 'productId', ttl: 60 })
   static async getOneProduct(this: void, req: Request, res: Response, next: NextFunction) {
     const product = await productRepository.getOneProductByParams(req.query);
     return product;
@@ -25,16 +25,19 @@ export default class ProductService {
   static async productRegister(this: void, req: Request, res: Response, next: NextFunction) {
     const [file] = (req as any).files as { originalname: string; buffer: Buffer }[] || [];
     const product = new Product(req.body);
+
     if (file) {
       const { saveFile } = await import('@libs/file');
       product.productImage = await saveFile(file);
     }
-    const result = await productRepository.createOrUpdateProduct(product);
+
+    const result = await productRepository.createProduct(product);
     return result;
   }
 
   @RequestHandler
-  @InvalidateCache({ keys: (req: Request) => ['products', `product:${req.body.productId}`] })
+  // @InvalidateCache({ keys: (req: Request) => ['products', `product:${req.body.productId}`] })
+  @InvalidateCache({ keys: ['products'] })
   static async productUpdate(this: void, req: Request, res: Response, next: NextFunction) {
     const [file] = (req as any).files as { originalname: string; buffer: Buffer }[] || [];
     const product = new Product(req.body);
@@ -42,7 +45,7 @@ export default class ProductService {
       const { saveFile } = await import('@libs/file');
       product.productImage = await saveFile(file);
     }
-    const result = await productRepository.createOrUpdateProduct(product);
+    const result = await productRepository.createProduct(product);
     return result;
   }
 }

@@ -10,11 +10,16 @@ class BusinessUnitRepository extends BaseRepository<BusinessUnitEntity> {
   async getBusinessUnitsByParams(params: Record<string, any>): Promise<ResponseInterface<BusinessUnitEntity>> {
     const { page, limit, orderBy, ...filters } = params;
 
+    this.joinConfig = {
+      users: 'left'
+    };
+
     return this.findAllByParams({
       filters,
       page,
       limit,
-      orderBy
+      orderBy,
+      forceJoins: ['users']
     });
   }
 

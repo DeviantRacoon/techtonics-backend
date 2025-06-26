@@ -1,7 +1,4 @@
-import { Expose, Type, plainToInstance, instanceToPlain } from 'class-transformer';
-
-import User from '@modules/users/domain/models/user';
-import BusinessUnit from '@modules/users/domain/models/business-unit';
+import { Expose, plainToInstance, instanceToPlain, Transform } from 'class-transformer';
 
 export type TYPE = 'ALMACEN' | 'SERVICIO';
 export type STATUS = 'ACTIVO' | 'ELIMINADO' | 'AGOTADO';
@@ -9,20 +6,20 @@ export type STATUS = 'ACTIVO' | 'ELIMINADO' | 'AGOTADO';
 export default class Product {
   @Expose() productId?: number;
   @Expose() productName?: string;
+  @Expose() productDescription?: string;
   @Expose() productImage?: string;
+  @Expose() productCode?: string;
+  @Transform(({ value }) => (value === '' ? null : value))
+  @Expose() productPrice?: number;
   @Expose() type?: TYPE;
+  @Transform(({ value }) => (value === '' ? null : value))
   @Expose() stock?: number;
   @Expose() status?: STATUS;
+  @Expose() createdBy?: number;
+  @Transform(({ value }) => (typeof value === 'string' ? parseInt(value, 10) : value))
+  @Expose() businessUnitId?: number;
   @Expose() createdAt?: string;
   @Expose() updatedAt?: string;
-
-  @Type(() => User)
-  @Expose()
-  createdBy?: User;
-
-  @Type(() => BusinessUnit)
-  @Expose()
-  businessUnit?: BusinessUnit;
 
   constructor(data: Partial<Product>) {
     return plainToInstance(Product, data, { excludeExtraneousValues: true });
@@ -35,3 +32,4 @@ export default class Product {
     );
   }
 }
+

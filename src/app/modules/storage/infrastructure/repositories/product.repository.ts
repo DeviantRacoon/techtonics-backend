@@ -36,13 +36,12 @@ class ProductRepository extends BaseRepository<ProductEntity> {
     });
   }
 
-  async createOrUpdateProduct(product: Product): Promise<ProductEntity> {
-    const { createdBy, businessUnit, ...params } = product.toJSON();
-    return await this.repository.save({
-      ...params,
-      createdBy: createdBy?.userId ? { userId: createdBy.userId } : undefined,
-      businessUnit: businessUnit?.businessUnitId ? { businessUnitId: businessUnit.businessUnitId } : undefined
-    });
+  async createProduct(product: Product): Promise<ProductEntity> {
+    const params = product.toJSON();
+    console.log(params);
+
+    this.repository.create({ ...params, businessUnit: { businessUnitId: params.businessUnitId } });
+    return this.repository.save(params);
   }
 }
 

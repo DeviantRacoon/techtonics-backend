@@ -5,6 +5,7 @@ import { RoleEntity } from "./role.entity";
 import { UserSessionEntity } from "./user-session.entity";
 import { BusinessUnitEntity } from "./business-unit.entity";
 import { ProductEntity } from "@modules/storage/infrastructure/entities/product.entity";
+import { ProductMovementEntity } from "@modules/storage/infrastructure/entities/product-movement.entity";
 
 export enum STATUS {
   ACTIVO = "ACTIVO",
@@ -68,6 +69,9 @@ export class UserEntity {
     }
   })
   businessUnits?: BusinessUnitEntity[];
+
+  @OneToMany(() => ProductMovementEntity, (movement) => movement.user)
+  movements!: ProductMovementEntity[];
 
   @OneToMany(() => ProductEntity, product => product.createdBy)
   products?: ProductEntity[];

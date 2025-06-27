@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, JoinColumn, OneToMany } from 'typeorm';
 
 import { UserEntity } from '@modules/users/infrastructure/entities/user.entity';
 import { BusinessUnitEntity } from '@modules/users/infrastructure/entities/business-unit.entity';
+import { ProductMovementEntity } from '@modules/storage/infrastructure/entities/product-movement.entity';
 
 export enum TYPE {
   ALMACEN = 'ALMACEN',
@@ -49,6 +50,9 @@ export class ProductEntity {
   @ManyToOne(() => BusinessUnitEntity, bu => bu.products)
   @JoinColumn({ name: "businessUnitId" })
   businessUnit!: BusinessUnitEntity
+
+  @OneToMany(() => ProductMovementEntity, (movement) => movement.product)
+  movements!: ProductMovementEntity[];
 
   @Column({ type: 'enum', enum: STATUS, default: STATUS.ACTIVO })
   status!: string;

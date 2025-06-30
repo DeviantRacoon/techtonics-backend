@@ -58,18 +58,13 @@ export function InvalidateCache(options: InvalidateOptions) {
       const keys = typeof options.keys === 'function' ? options.keys(req) : options.keys;
 
       for (const key of keys) {
-        // Delete all keys that start with the given prefix using SCAN
-        let cursor = 0;
-        do {
-          const [nextCursor, foundKeys] = await (redisClient as any).scan(cursor, {
-            MATCH: `${key}*`,
-            COUNT: 100,
-          });
-          cursor = parseInt(nextCursor, 10);
-          if (foundKeys.length) {
-            await (redisClient as any).del(...foundKeys);
-          }
-        } while (cursor !== 0);
+        // Delete all keys that start with the given prefix using scanIterator
+        for await (const foundKey of (redisClient as any).scanIterator({
+          MATCH: `${key}*`,
+          COUNT: 100,
+        })) {
+          await (redisClient as any).del(foundKey);
+        }
       }
 
       return result;
